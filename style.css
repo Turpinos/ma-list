@@ -1,0 +1,689 @@
+body{
+    margin: 0;
+    padding: 0;
+    font-family: 'Jost', sans-serif;
+    min-width: 335px;
+    
+}
+
+header{
+    background-color: rgb(93, 175, 111);
+    color: white;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+h1{
+    font-size: 2rem;
+    padding-block: 0.5rem;
+    margin: 0 auto;
+}
+
+#mainIndex{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* _______________________Styles des sections: ma liste, calculatrice, participation_____________________ */
+section{
+    width: 90%;
+    margin-block: 1rem;
+    padding-inline: 0.5rem;
+    box-shadow: 0px 1px 3px rgba(47, 47, 47, 0.49);
+}
+
+h2{
+    color: rgb(93, 175, 111);
+    padding-block: 0.5rem;
+    font-size: 2rem;
+    margin-block: 0;
+    margin-left: 2rem;
+    margin-right: auto;
+}
+
+#items{
+    margin-top: 2rem;
+}
+
+#items tr:nth-child(even){
+    background-color: rgb(240, 253, 242);
+}
+
+#items tbody tr td:nth-child(1){
+    display: none;
+}
+
+#items tbody tr td:nth-child(2){
+    width: 33%;
+}
+
+#items tbody tr td:nth-child(3){
+    width: 33%;
+    text-align: center;
+}
+
+#items tbody tr td:nth-child(4){
+    width: 33%;
+    text-align: center;
+}
+
+#items tbody tr td:nth-child(5){
+    width: 1.5rem;
+    text-align: center;
+}
+
+#items tr{
+    font-weight: 500;
+}
+
+.delete{
+    background-color: rgb(255, 111, 111);
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    transition: all 200ms;
+}
+
+.delete:hover{
+    background-color: rgb(249, 76, 76);
+}
+
+.delete:active{
+    background-color: rgb(249, 40, 40);
+}
+
+#list form{
+    width: 100%;
+    margin-block: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-size: 1rem;
+}
+
+#list form label{
+    display: none;
+}
+
+#list form div{
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    margin-block: 1.25rem;
+}
+
+#list form div div{
+    width: auto;
+}
+
+#list input{
+    height: 1.5rem;
+    border: 1px black solid;
+}
+
+#name{
+    width: 10rem;
+}
+
+#value{
+    width: 3rem;
+}
+
+#qte{
+    width: 2rem;
+}
+
+#list label{
+    margin-right: 0.5rem;
+}
+
+#list button{
+    font-size: 1rem;
+    margin: auto;
+    padding: 0.5rem;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.467);
+    background-color: rgb(93, 175, 111);
+    color: white;
+    border: none;
+    transition: all 150ms;
+}
+
+#list button:hover{
+    background-color: rgb(62, 140, 79);
+}
+
+#list button:active{
+    transform: scale(0.95);
+}
+
+/*______________________________________Calculatrice section_____________________________________________*/
+
+#calculatrice form{
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+#calculatrice form div{
+    width: auto;
+    display: flex;
+    align-items: center;
+}
+
+#calculatrice form div select{
+    height: 1.8rem;
+    margin-inline: 1rem;
+    border: 1px black solid;
+}
+
+#calculatrice form div select option{
+    color: rgb(66, 66, 66);
+}
+
+#calculatrice form label{
+    display: none;
+}
+
+#calculatrice button{
+    width: auto;
+    font-size: 1rem;
+    padding: 0.5rem;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.467);
+    background-color: rgb(93, 175, 111);
+    color: white;
+    border: none;
+    transition: all 100ms;
+}
+
+#calculatrice button:hover{
+    background-color: rgb(62, 140, 79);
+}
+
+#calculatrice button:active{
+    transform: scale(0.95);
+}
+
+#calculatrice form select{
+    min-width: 5rem;
+    height: 1.5rem;
+    border: 1px black solid;
+}
+
+#result{
+    margin-top: 2rem;
+    padding-inline: 5%;
+}
+
+.divChoice{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    height: 1.5rem;
+    margin-block: 0.5rem;
+}
+
+.divChoice:nth-child(even){
+    background-color: rgb(240, 253, 242);
+}
+
+.divChoice p{
+    margin: 0;
+    font-weight: 500;
+}
+
+.delCalculate{
+    width: 1.5rem;
+    border-radius: 1.5rem;
+    background: rgb(255, 111, 111);
+}
+
+.delCalculate:hover{
+    background-color: rgb(249, 76, 76);
+}
+
+.delCalculate:active{
+    background-color: rgb(249, 40, 40);
+}
+
+/*__________________________________________Participants section________________________________________________*/
+
+#participation form{
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+#participation form label{
+    display: none;
+}
+
+#participation form input{
+    height: 1.5rem;
+    border: 1px black solid;
+}
+
+#participation button{
+    width: auto;
+    font-size: 1rem;
+    padding: 0.5rem;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.467);
+    background-color: rgb(93, 175, 111);
+    color: white;
+    border: none;
+    transition: all 100ms;
+}
+
+#participation button:hover{
+    background-color: rgb(62, 140, 79);
+}
+
+#participation button:active{
+    transform: scale(0.95);
+}
+
+#participants{
+    margin-top: 2rem;
+}
+
+#participants tr{
+    font-weight: 500;
+}
+
+#participants tr:nth-child(even){
+    background-color: rgb(240, 253, 242);
+}
+
+#participants tr td:nth-child(1){
+    width: 25%;
+}
+
+#participants tr td:nth-child(2){
+    width: 25%;
+}
+
+#participants tr td:nth-child(3){
+    width: 25%;
+    color: grey;
+}
+
+#participants tr td:nth-child(4){
+    width: 25%;
+}
+
+/*Fin des sections*/
+
+/*______________________________________________Footer_____________________________________________*/
+
+footer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 1.25rem;
+    margin-block: 4rem;
+}
+
+footer button p{
+    margin-block: auto;
+}
+
+footer #info{
+    margin-block: 1rem;
+    text-align: center;
+}
+
+footer b{
+    font-weight: 500;
+    color: rgb(93, 175, 111);
+
+}
+
+footer #disconnect{
+    width: auto;
+    padding: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-block: 1.5rem;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.467);
+    background-color: white;
+    color: rgb(93, 175, 111);
+    border: none;
+    border-radius: 1rem;
+    transition: all 150ms;
+}
+
+footer #disconnect:hover{
+    background-color: rgb(255, 78, 78);
+    color: white;
+}
+
+footer #disconnect:active{
+    transform: scale(0.95);
+}
+
+footer #save{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    height: 2.5rem;
+    width: 2.5rem;
+    overflow: hidden;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0;
+    margin-block: 0.5rem;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.467);
+    color: #5588D4;
+    background-color: white;
+    border: none;
+    border-radius: 2rem;
+    transition: all 150ms;
+}
+
+footer #save:hover{
+    width: 8.5rem;
+}
+
+footer #save:active{
+    transform: scale(0.95);
+}
+
+#saveImg{
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-block: auto;
+    margin-inline: 0.5rem;
+}
+
+footer #download{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    height: 2.5rem;
+    width: 2.5rem;
+    overflow: hidden;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0;
+    margin-block: 0.5rem;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.467);
+    background-color: white;
+    color: #5588D4;
+    border: none;
+    border-radius: 2rem;
+    transition: all 150ms;
+}
+
+footer #download:hover{
+    width: 7.5rem;
+}
+
+footer #download:active{
+    transform: scale(0.95);
+}
+
+#downloadImg{
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-block: auto;
+    margin-inline: 0.5rem;
+}
+
+
+/*___________________________________Style page de réception de données__________________________________________ */
+#noValidInput{
+    margin-block: 2rem;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
+    border: 1px rgba(255, 75, 75, 0.5) solid;
+    border-radius: 20px;
+    background-color: rgb(255, 197, 197);
+    color: rgb(138, 0, 0);
+}
+
+#noValidInput p{
+    text-align: center;
+    width: 90%;
+}
+
+#validInput{
+    margin-block: 2rem;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
+    border: 1px rgba(90, 255, 75, 0.5) solid;
+    border-radius: 20px;
+    background-color: rgb(199, 255, 197);
+    color: rgb(7, 138, 0);
+}
+
+#validInput p{
+    text-align: center;
+    width: 90%;
+}
+
+#noConnection{
+    margin-block: 2rem;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
+    border: 1px rgba(255, 75, 75, 0.5) solid;
+    border-radius: 20px;
+    background-color: rgb(255, 197, 197);
+    color: rgb(138, 0, 0);
+}
+
+#noConnection p{
+    text-align: center;
+    width: 90%;
+}
+
+/* ______________________________________________________Page de login__________________________________________________________ */
+.mainLogin{
+    display: flex;
+    flex-direction: column;
+}
+
+.formLogin{
+    margin: 2rem auto;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+}
+
+.formLogin button{
+    margin-block: 0.5rem;
+    font-size: 1rem;
+    padding: 0.5rem;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.467);
+    background-color: rgb(93, 175, 111);
+    color: white;
+    border: none;
+    transition: all 150ms;
+}
+
+.formLogin button:hover{
+    background-color: rgb(62, 140, 79);
+}
+
+.formLogin button:active{
+    transform: scale(0.95);
+}
+
+.formLogin div{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-block: 0.5rem;
+}
+
+.formLogin div label{
+    padding-right: 1rem;
+    font-weight: 500;
+}
+
+.alert{
+    display: flex;
+    flex-direction: column;
+    color: rgb(210, 54, 54);
+    font-weight: 500;
+}
+
+@media screen and (min-width: 720px) {
+
+#noValidInput{
+    width: 33%;
+}
+
+#validInput{
+    width: 33%;
+}
+
+#noConnection{
+    width: 33%;
+}
+    
+#list form label{
+    display: inline;
+}
+        
+#items tbody tr td:nth-child(1){
+    display: inherit;
+    color: grey;
+    width: 25%;
+}
+    
+#items tbody tr td:nth-child(2){
+    width: 25%;
+}
+    
+#items tbody tr td:nth-child(3){
+    width: 25%;
+    text-align: center;
+}
+    
+#items tbody tr td:nth-child(4){
+    width: 25%;
+    text-align: center;
+}
+    
+           
+#participation form label{
+    display: inline;
+    margin-right: 0.5rem;
+}
+        
+#calculatrice form label{
+    display: block;
+    margin-right: 0.5rem;
+}
+}
+
+@media screen and (min-width: 1200px) {
+
+.mainLogin{
+    flex-direction: row;
+}
+
+
+
+#mainIndex{
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: normal;
+}
+
+section:nth-of-type(1){
+    width: 33%;
+    height: 100%;
+}
+
+section:nth-of-type(2){
+    width: 28%;
+    height: 100%;
+}
+
+section:nth-of-type(3){
+    width: 33%;
+    height: 100%;
+}
+
+#list form label{
+    display: none;
+}
+        
+#items tbody tr td:nth-child(1){
+    display: none
+}
+    
+#items tbody tr td:nth-child(2){
+    width: 33%;
+}
+    
+#items tbody tr td:nth-child(3){
+    width: 33%;
+}
+    
+#items tbody tr td:nth-child(4){
+    width: 33%;
+}
+    
+           
+#participation form label{
+    display: none;
+    margin-right: 0.5rem;
+}
+        
+#calculatrice form label{
+    display: none;
+    margin-right: 0.5rem;
+}
+
+}
+
+@media screen and (min-width: 1515px) {
+    
+#list form label{
+    display: inline;
+}
+    
+#items tbody tr td:nth-child(1){
+    display: inherit;
+    width: 25%;
+}
+
+#items tbody tr td:nth-child(2){
+    width: 25%;
+}
+
+#items tbody tr td:nth-child(3){
+    width: 25%;
+}
+
+#items tbody tr td:nth-child(4){
+    width: 25%;
+}
+
+       
+#participation form label{
+    display: inline;
+    margin-right: 0.5rem;
+}
+    
+#calculatrice form label{
+    display: block;
+    margin-right: 0.5rem;
+}
+
+}
