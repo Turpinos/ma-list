@@ -19,12 +19,4 @@ if(isset($_SESSION['sessionActive'])){
     $jsPeoples = json_encode($peoplesArray);
 }
 
-if(isset($_SESSION['sessionActive'])){
-    $moderator = $mySqlConnection->prepare('SELECT `UserSession` FROM `sessionsusers` WHERE sessionKey = (:sessionKey)');
-    $moderator -> execute([
-        'sessionKey' => $_SESSION['sessionActive']
-    ]);
-    $nameModerator = $moderator->fetchAll();
-}
-
 ?>

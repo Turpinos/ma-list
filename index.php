@@ -25,7 +25,7 @@ require_once('processPhp/receptionBDD.php');
         <?php if(isset($_SESSION['userActive']) && isset($_SESSION['sessionActive'])): ?>
             <section id="list">
                 <h2>Ma liste</h2>
-                <?php if($nameModerator[0]['UserSession'] == $_SESSION['userActive']): ?>
+                <?php if($_SESSION['nameModerator'] == $_SESSION['userActive']): ?>
                 <form method="POST" enctype="text/plain">
                     <div>
                         <div>
@@ -61,7 +61,7 @@ require_once('processPhp/receptionBDD.php');
             </section>
             <section id="participation">
                 <h2>Participation</h2>
-                <?php if($nameModerator[0]['UserSession'] == $_SESSION['userActive']): ?>
+                <?php if($_SESSION['nameModerator'] == $_SESSION['userActive']): ?>
                 <form>
                     <div>
                         <label id="labelParticipant" for="participant">Participant:</label>
@@ -80,7 +80,7 @@ require_once('processPhp/receptionBDD.php');
     <footer>
         <p id="info"><b id="nameUserActive"><?php echo $_SESSION['userActive'] ?></b> est connecté sur la session <b id="nameSessionActive"><?php echo $_SESSION['sessionActive'] ?></b></p>
         
-        <?php if($nameModerator[0]['UserSession'] == $_SESSION['userActive']): ?>
+        <?php if($_SESSION['nameModerator'] == $_SESSION['userActive']): ?>
         <form id="formToSave" method="post" action="envoieBDD.php">
             <button id="save" type="submit"><img id="saveImg" src="img/sauvegarder.png" alt="sauvegarde"><p>Enregistrer</p></button>
         </form>

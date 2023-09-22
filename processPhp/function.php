@@ -19,6 +19,7 @@ if(isset($_POST['inputUser']) && isset($_POST['inputPassword'])){
               foreach($sessionsUsers as $validSession){
                      if($validSession['sessionKey'] == $_POST['AccountActiveForSessionActive']){
                             $_SESSION['sessionActive'] = $validSession['sessionKey'];
+                            $_SESSION['nameModerator'] = $validSession['UserSession'];
                      }
               }
        }else if(!empty($_POST['AccountActiveForNewSession'])){
@@ -29,10 +30,19 @@ if(isset($_POST['inputUser']) && isset($_POST['inputPassword'])){
               }
               $accountActiveForNewSession = validInput($_POST['AccountActiveForNewSession']);
               if(!isset($_SESSION['errorSessionIsActive']) && !empty($accountActiveForNewSession) && isset($_SESSION['userActive'])){
-                     $_SESSION['sessionActive'] = $_POST['AccountActiveForNewSession'];
+                     $_SESSION['sessionActive'] = $accountActiveForNewSession;
+                     $_SESSION['nameModerator'] = $_SESSION['userActive'];
+
+                     $sessionAttri = $mySqlConnection->prepare('INSERT INTO `attributions` (`userName`, `sessionKey`) VALUES (:userName , :sessionKey)');
+                     $sessionAttri->execute([
+                            'userName' => $_SESSION['userActive'],
+                            'sessionKey' => $accountActiveForNewSession
+                     ]);
+                     $sessionAttri->fetchAll();
+
                      $addNewSession = $mySqlConnection -> prepare('INSERT INTO `sessionsusers`(`sessionKey`, `UserSession`) VALUES (:sessionKey, :UserSession)');
                      $addNewSession -> execute([
-                            'sessionKey' => $_POST['AccountActiveForNewSession'],
+                            'sessionKey' => $accountActiveForNewSession,
                             'UserSession' => $_SESSION['userActive']
                      ]);
                      $addNewSession -> fetchAll();
@@ -76,6 +86,7 @@ if(isset($inputCrtUser) && isset($inputCrtPassword)){
               foreach($sessionsUsers as $validSession){
                      if($validSession['sessionKey'] == $_POST['newAccountForSessionActive']){
                             $_SESSION['sessionActive'] = $validSession['sessionKey'];
+                            $_SESSION['nameModerator'] = $validSession['UserSession'];
                      }
               }
        }else if(!empty($_POST['newAccountForNewSession'])){
@@ -86,10 +97,19 @@ if(isset($inputCrtUser) && isset($inputCrtPassword)){
               }
               $newAccountForNewSession = validInput($_POST['newAccountForNewSession']);
               if(!isset($_SESSION['errorSessionIsActiveCrt']) && !empty($newAccountForNewSession) && isset($_SESSION['userActive'])){
-                     $_SESSION['sessionActive'] = $_POST['newAccountForNewSession'];
+                     $_SESSION['sessionActive'] = $newAccountForNewSession;
+                     $_SESSION['nameModerator'] = $_SESSION['userActive'];
+
+                     $sessionAttri = $mySqlConnection->prepare('INSERT INTO `attributions` (`userName`, `sessionKey`) VALUES (:userName , :sessionKey)');
+                     $sessionAttri->execute([
+                            'userName' => $_SESSION['userActive'],
+                            'sessionKey' => $newAccountForNewSession
+                     ]);
+                     $sessionAttri->fetchAll();
+
                      $addNewSession = $mySqlConnection -> prepare('INSERT INTO `sessionsusers`(`sessionKey`, `UserSession`) VALUES (:sessionKey, :UserSession)');
                      $addNewSession -> execute([
-                            'sessionKey' => $_POST['newAccountForNewSession'],
+                            'sessionKey' => $newAccountForNewSession,
                             'UserSession' => $_SESSION['userActive']
                      ]);
                      $addNewSession -> fetchAll();
@@ -109,6 +129,31 @@ if(isset($_POST['inputSession']) && !isset($_SESSION['sessionActive'])){
                      $_SESSION['errorSession'] = 'Il y a une erreur avec le nom de session.';
               }
        }
+}
+
+//Info attributions
+
+if(isset($_SESSION['userActive']) && isset($_SESSION['sessionActive'])){
+       
+       $sessionAttri = $mySqlConnection->prepare('SELECT `sessionKey` FROM attributions WHERE userName = (:userName)');
+       $sessionAttri->execute([
+              'userName' => $_SESSION['userActive']
+       ]);
+       $Attributions = $sessionAttri->fetchAll();
+
+       $validAccess = false;
+foreach($Attributions as $isValidAttribution){
+       if($isValidAttribution['sessionKey'] == $_SESSION['sessionActive']){
+              $validAccess = true;
+       };
+}
+
+       if(!$validAccess){
+              unset($_SESSION['userActive']);
+              unset($_SESSION['sessionActive']);
+              $_SESSION['errorAccess'] = 'Vous n\'avez pas les droits d\'accès à la session choisie';
+       }
+
 }
 
 

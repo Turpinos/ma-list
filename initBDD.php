@@ -21,8 +21,5 @@ $users = $usersStatement->fetchAll();
 $sessionStatement = $mySqlConnection->prepare('SELECT `sessionKey`, `UserSession`  FROM sessionsusers');
 $sessionStatement->execute();
 $sessionsUsers = $sessionStatement->fetchAll();
-$sessionsUsers
-
-
 
 ?>

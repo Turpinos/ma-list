@@ -23,6 +23,7 @@
         <?php if(isset($_POST['deco'])): ?>
             <main class="mainLogin">
                 <form class="formLogin" method="post" action="index.php">
+                    <h3>Connexion</h3>
                 <div>
                     <label for="inputUser">Pseudo:</label>
                     <input type="text" name="inputUser">
@@ -52,12 +53,17 @@
                         if(isset($_SESSION['sessionActive'])){
                             unset($_SESSION['sessionActive']);
                         }
+
+                        if(isset($_SESSION['nameModerator'])){
+                            unset($_SESSION['nameModerator']);
+                        };
                     ?>
 
                 
                 </div>
                 </form>
                 <form class="formLogin" method="post" action="index.php">
+                    <h3>Inscription</h3>
                     <div>
                         <label for="inputCrtUser">Pseudo:</label>
                         <input type="text" name="inputCrtUser">
@@ -85,6 +91,7 @@
     <?php else: ?>
     <main class="mainLogin">
         <form class="formLogin" method="post" action="index.php">
+            <h3>Connexion</h3>
             <div>
                 <label for="inputUser">Pseudo:</label>
                 <input type="text" name="inputUser">
@@ -108,33 +115,45 @@
                 <?php
                 if(isset($_SESSION['userActive'])){
                     unset($_SESSION['userActive']);
-                }
+                };
                 
                 if(isset($_SESSION['sessionActive'])){
                     unset($_SESSION['sessionActive']);
-                }
+                };
+
+                if(isset($_SESSION['nameModerator'])){
+                    unset($_SESSION['nameModerator']);
+                };
                 
                 if(isset($_SESSION['errorUser'])){
                     echo '<p>'. $_SESSION['errorUser'] .'</p>';
                     unset($_SESSION['errorUser']);
-                }
+                };
+
                 if(isset($_SESSION['errorSession'])){
                     echo '<p>'. $_SESSION['errorSession'] .'</p>';
                     unset($_SESSION['errorSession']);
-                }
+                };
+
                 if(isset($_SESSION['errorDoubleInput'])){
                     echo '<p>'. $_SESSION['errorDoubleInput'] .'</p>';
                     unset($_SESSION['errorDoubleInput']);
-                }
+                };
+
                 if(isset($_SESSION['errorSessionIsActive'])){
                     echo '<p>'. $_SESSION['errorSessionIsActive'] .'</p>';
                     unset($_SESSION['errorSessionIsActive']);
-                }
+                };
+                
+                if(isset($_SESSION['errorAccess'])){
+                    echo '<p>' . $_SESSION['errorAccess'] . '</p>';
+                };
 
                 ?>
             </div>
         </form>
         <form class="formLogin" method="post" action="index.php">
+            <h3>Inscription</h3>
             <div>
                 <label for="inputCrtUser">Pseudo:</label>
                 <input type="text" name="inputCrtUser">
