@@ -98,7 +98,7 @@
             </div>
             <div>
                 <label for="inputPassword">Mot de passe:</label>
-                <input type="password" name="inputPassword">
+                <input class="switchPassword" type="password" name="inputPassword"><p class="indicatorSwitch"><img src="img/cadenas-verrouille.png"></p>
             </div>
             <div><p>Se connecter à une session:</p></div>
             <div>
@@ -160,7 +160,7 @@
             </div>
             <div>
                 <label for="inputCrtPassword">Mot de passe:</label>
-                <input type="password" name="inputCrtPassword">
+                <input class="switchPassword" type="password" name="inputCrtPassword"><p class="indicatorSwitch"><img src="img/cadenas-verrouille.png"></p>
             </div>
             <div><p>Se connecter à une session:</p></div>
             <div>
@@ -197,5 +197,6 @@
     <footer>
         
     </footer>
+    <script type="module" src="login.js"></script>
 </body>
 </html>
