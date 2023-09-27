@@ -118,15 +118,24 @@ if(isset($inputCrtUser) && isset($inputCrtPassword)){
 }
     
 if(isset($_POST['inputUser']) && !isset($_SESSION['userActive'])){
-       if($_SERVER['PHP_SELF'] == '/ToDoList/index.php'){
+       if($_SERVER['PHP_SELF'] == '/ma-liste/index.php'){
               $_SESSION['errorUser'] = 'Il y a une erreur avec le nom d\'utilisateur ou le MDP.';
        }
        
 }
-if(isset($_POST['inputSession']) && !isset($_SESSION['sessionActive'])){
+
+if(isset($_POST['AccountActiveForSessionActive']) && !isset($_SESSION['sessionActive'])){
        if(!isset($_SESSION['errorDoubleInput'])){
-              if($_SERVER['PHP_SELF'] == '/ToDoList/index.php'){
+              if($_SERVER['PHP_SELF'] == '/ma-liste/index.php'){
                      $_SESSION['errorSession'] = 'Il y a une erreur avec le nom de session.';
+              }
+       }
+}
+
+if(isset($_POST['newAccountForSessionActive']) && !isset($_SESSION['sessionActive'])){
+       if(!isset($_SESSION['errorDoubleInput'])){
+              if($_SERVER['PHP_SELF'] == '/ma-liste/index.php'){
+                     $_SESSION['errorSessionCrt'] = 'Il y a une erreur avec le nom de session.';
               }
        }
 }
@@ -154,6 +163,24 @@ foreach($Attributions as $isValidAttribution){
               $_SESSION['errorAccess'] = 'Vous n\'avez pas les droits d\'accès à la session choisie';
        }
 
+}
+
+//____________________________________Envoi mail au support______________________________________//
+
+if(isset($_POST['emailForSupport']) && isset($_POST['messageForSupport'])){
+
+       $email = validInput($_POST['emailForSupport']);
+       $message = validInput($_POST['messageForSupport']);
+
+       if(!empty($email) && !empty($message)){
+              $to = 'arthur58230@hotmail.fr';
+              $subject = 'Support de "Ma liste"';
+              $message = $message;
+              $header = 'From: '. $email . '\r\n';
+              mail($to, $subject, $message, $header);
+       }else{
+              $_SESSION['errorMessageSupport'] = 'Vous tentez d\'envoyer des informations inexploitables'; 
+       };
 }
 
 

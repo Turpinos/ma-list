@@ -502,6 +502,10 @@ footer #download:active{
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
 }
 
+.formLogin h3{
+    font-size: 1.5rem;
+}
+
 .indicatorSwitch{
     margin: auto 0rem auto 0.1rem;
     font-weight: 500;
@@ -542,13 +546,28 @@ footer #download:active{
     margin-block: 0.5rem;
 }
 
+.formLogin div div{
+    width: auto;
+}
+
+.switchPassword{
+    width: 9.5rem;
+}
+
 .formLogin div label{
     padding-right: 1rem;
     font-weight: 500;
+    font-size: 1rem;
+}
+
+.formLogin div textarea{
+    max-width: 250px;
+    max-height: 300px;
 }
 
 .alert{
     display: flex;
+    font-size: 1rem;
     flex-direction: column;
     color: rgb(210, 54, 54);
     font-weight: 500;
@@ -615,7 +634,7 @@ footer #download:active{
 #mainIndex{
     flex-direction: row;
     justify-content: space-around;
-    align-items: normal;
+    align-items: unset;
 }
 
 section:nth-of-type(1){

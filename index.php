@@ -21,6 +21,20 @@ require_once('processPhp/receptionBDD.php');
             <h1>Ma liste</h1>
         </div>
     </header>
+    <?php if(isset($_SESSION['userActive']) && isset($_SESSION['sessionActive'])): ?>
+        <section>
+            <h2>Spectateurs de la session</h2>
+            <div id="spec">
+                <?php foreach($listSpec as $spec): ?>
+                    <form action="index.php" method="post">
+                        <input type="hidden" name="<?php echo $spec['userName'] ?>" value="<?php echo $spec['userName'] ?>">
+                        <button type="submit"><?php echo $spec['userName'] ?></button>
+                        <!-- Ajouter style au bouton(en ajoutant une croix de supp, comfirmation de supp en js comme pour les btn de sauvegarde et d'import), filtrer le spec qui est moderateur (pas utile) en comparant à la $_SESSION['nameModerator']  -->
+                    </form>
+                <?php endforeach; ?>
+            </div>
+        </section>
+    <?php endif; ?>
     <main id="mainIndex">
         <?php if(isset($_SESSION['userActive']) && isset($_SESSION['sessionActive'])): ?>
             <section id="list">

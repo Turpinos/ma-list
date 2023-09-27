@@ -19,4 +19,12 @@ if(isset($_SESSION['sessionActive'])){
     $jsPeoples = json_encode($peoplesArray);
 }
 
+if(isset($_SESSION['sessionActive'])){
+    $attribution = $mySqlConnection->prepare('SELECT `userName` FROM `attributions` WHERE sessionKey = (:sessionKey)');
+    $attribution->execute([
+        'sessionKey' => $_SESSION['sessionActive']
+    ]);
+    $listSpec = $attribution->fetchAll(PDO::FETCH_ASSOC);
+}
+
 ?>

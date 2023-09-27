@@ -10,7 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,300&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="img/liste.png">
-
     <title>Ma liste</title>
 </head>
 <body>
@@ -30,7 +29,7 @@
                 </div>
                 <div>
                     <label for="inputPassword">Mot de passe:</label>
-                    <input type="password" name="inputPassword">
+                    <input class="switchPassword" type="password" name="inputPassword"><p class="indicatorSwitch"><img src="img/cadenas-verrouille.png"></p>
                 </div>
                 <div><p>Se connecter à une session:</p></div>
                 <div>
@@ -70,7 +69,7 @@
                     </div>
                     <div>
                         <label for="inputCrtPassword">Mot de passe:</label>
-                        <input type="password" name="inputCrtPassword">
+                        <input class="switchPassword" type="password" name="inputCrtPassword"><p class="indicatorSwitch"><img src="img/cadenas-verrouille.png"></p>
                     </div>
                     <div><p>Se connecter à une session:</p></div>
                     <div>
@@ -98,7 +97,9 @@
             </div>
             <div>
                 <label for="inputPassword">Mot de passe:</label>
+                <div>
                 <input class="switchPassword" type="password" name="inputPassword"><p class="indicatorSwitch"><img src="img/cadenas-verrouille.png"></p>
+                </div>
             </div>
             <div><p>Se connecter à une session:</p></div>
             <div>
@@ -160,7 +161,9 @@
             </div>
             <div>
                 <label for="inputCrtPassword">Mot de passe:</label>
+                <div>
                 <input class="switchPassword" type="password" name="inputCrtPassword"><p class="indicatorSwitch"><img src="img/cadenas-verrouille.png"></p>
+                </div>
             </div>
             <div><p>Se connecter à une session:</p></div>
             <div>
@@ -189,13 +192,39 @@
                     echo '<p>'. $_SESSION['errorUserAlreadyExists'] .'</p>';
                     unset($_SESSION['errorUserAlreadyExists']);
                 }
+
+                if(isset($_SESSION['errorSessionCrt'])){
+                    echo '<p>'. $_SESSION['errorSessionCrt'] .'</p>';
+                    unset($_SESSION['errorSessionCrt']);
+                }
                 ?>
             </div>
         </form>
     </main>
     <?php endif; ?>
     <footer>
-        
+        <form class="formLogin" action="login.php" method="post">
+            <h3>Message au support</h3>
+            <div>
+                <label for="emailForSupport">Email:</label>
+                <input type="text" name="emailForSupport" required>
+            </div>
+            <div>
+                <label for="messageForSupport">Votre message:</label>
+                <textarea name="messageForSupport" maxlength="250" cols="20" required></textarea>
+            </div>
+            <button type="submit">Envoyer</button>
+            <div class="alert">
+                <?php 
+                
+                if(isset($_SESSION['errorMessageSupport'])){
+                    echo '<p>'. $_SESSION['errorMessageSupport'] .'</p>';
+                    unset($_SESSION['errorMessageSupport']);
+                };
+                
+                ?>
+            </div>
+        </form>
     </footer>
     <script type="module" src="login.js"></script>
 </body>
