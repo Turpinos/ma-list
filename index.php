@@ -22,15 +22,19 @@ require_once('processPhp/receptionBDD.php');
         </div>
     </header>
     <?php if(isset($_SESSION['userActive']) && isset($_SESSION['sessionActive'])): ?>
-        <section>
+        <section id="sectionSpec">
             <h2>Spectateurs de la session</h2>
             <div id="spec">
                 <?php foreach($listSpec as $spec): ?>
-                    <form action="index.php" method="post">
-                        <input type="hidden" name="<?php echo $spec['userName'] ?>" value="<?php echo $spec['userName'] ?>">
-                        <button type="submit"><?php echo $spec['userName'] ?></button>
-                        <!-- Ajouter style au bouton(en ajoutant une croix de supp, comfirmation de supp en js comme pour les btn de sauvegarde et d'import), filtrer le spec qui est moderateur (pas utile) en comparant à la $_SESSION['nameModerator']  -->
-                    </form>
+                    <?php if($spec['userName'] != $_SESSION['nameModerator']): ?>
+                        <form action="index.php" method="post">
+                            <input type="hidden" name="delFormSpec" value="<?php echo $spec['userName'] ?>">
+                            <button class="spec" type="submit"><?php echo '<p>'. $spec['userName'] .'</p>' ?><img src="img/fermer.png" alt="supprimer"></button>
+                            <!-- comfirmation de supp en js comme pour les btn de sauvegarde et d'import ajouter form pour ajout spec-->
+                        </form>
+                    <?php else: ?>
+                        <p class="host"><?php echo $spec['userName'] ?>(hôte)</p>
+                    <?php endif; ?>
                 <?php endforeach; ?>
             </div>
         </section>

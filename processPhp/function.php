@@ -165,6 +165,18 @@ foreach($Attributions as $isValidAttribution){
 
 }
 
+//Retirer une attribution..
+
+if(isset($_POST['delFormSpec'])){
+       $delSpec = $mySqlConnection->prepare('DELETE FROM `attributions` WHERE `userName` = :userName AND `sessionKey` = :sessionKey');
+       $delSpec->execute([
+              'userName' => validInput($_POST['delFormSpec']),
+              'sessionKey' => $_SESSION['sessionActive']
+       ]);
+}
+
+
+
 //____________________________________Envoi mail au support______________________________________//
 
 if(isset($_POST['emailForSupport']) && isset($_POST['messageForSupport'])){

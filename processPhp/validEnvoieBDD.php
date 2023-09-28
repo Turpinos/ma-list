@@ -7,7 +7,6 @@ if(isset($_SESSION['sessionActive'])){
         $removeSessionItems->execute([
             'sessionKey' => $_SESSION['sessionActive']
         ]);
-        $removeSessionItems->fetchAll();
 
         $countItems = count($_POST['items'])/4;
         
@@ -21,14 +20,17 @@ if(isset($_SESSION['sessionActive'])){
             'price' => htmlspecialchars(strip_tags($_POST['items']['price'.$i])),
             'qte' => htmlspecialchars(strip_tags($_POST['items']['qte'.$i]))
             ]);
-            $addSessionItems->fetchAll();
         }
+
         $validInput = true;
         header("Refresh:3; url=index.php");
+
     }else{
+
         $validInput = false;
         header("Refresh:3; url=index.php");
     }
+
     $connected = true;
     header("Refresh:3; url=index.php");
 
@@ -38,7 +40,7 @@ if(isset($_SESSION['sessionActive'])){
         $removeSessionPart -> execute([
             'sessionKey' => $_SESSION['sessionActive']
         ]);
-        $removeSessionItems -> fetchAll();
+        
 
         $countPart = count($_POST['part'])/2;
 
@@ -49,10 +51,12 @@ if(isset($_SESSION['sessionActive'])){
                 'nameParticipant' => htmlspecialchars(strip_tags($_POST['part']['name'.$i])),
                 'contribution' => htmlspecialchars(strip_tags($_POST['part']['contribution'.$i]))
             ]);
+            
         }
     }
 
 }else{
+    
     $connected = false;
     header("Refresh:3; url=index.php");
 }

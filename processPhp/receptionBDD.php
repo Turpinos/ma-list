@@ -20,7 +20,7 @@ if(isset($_SESSION['sessionActive'])){
 }
 
 if(isset($_SESSION['sessionActive'])){
-    $attribution = $mySqlConnection->prepare('SELECT `userName` FROM `attributions` WHERE sessionKey = (:sessionKey)');
+    $attribution = $mySqlConnection->prepare('SELECT `userName` FROM `attributions` WHERE sessionKey = (:sessionKey) ORDER BY `userName`');
     $attribution->execute([
         'sessionKey' => $_SESSION['sessionActive']
     ]);
