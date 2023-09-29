@@ -23,7 +23,7 @@ require_once('processPhp/receptionBDD.php');
     </header>
     <?php if(isset($_SESSION['userActive']) && isset($_SESSION['sessionActive'])): ?>
         <section id="sectionSpec">
-            <h2>Spectateurs de la session</h2>
+            <h2>Spectateurs</h2>
             <div id="spec">
                 <?php foreach($listSpec as $spec): ?>
                     <?php if($spec['userName'] != $_SESSION['nameModerator']): ?>
@@ -36,6 +36,14 @@ require_once('processPhp/receptionBDD.php');
                         <p class="host"><?php echo $spec['userName'] ?>(hôte)</p>
                     <?php endif; ?>
                 <?php endforeach; ?>
+            </div>
+            <form id="addFormSpec" action="index.php" method="post">
+                <input type="text" name="addFromSpec" required>
+                <button type="submit">Ajouter</button>
+            </form>
+            <div class='alert'>
+                <?php if(isset($errorDoublon)){ echo '<p>'. $errorDoublon .'</p>';} ?>
+                <?php if(isset($uncaughtUser)){ echo '<p>'. $uncaughtUser .'</p>';} ?>
             </div>
         </section>
     <?php endif; ?>

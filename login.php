@@ -61,28 +61,42 @@
                 
                 </div>
                 </form>
-                <form class="formLogin" method="post" action="index.php">
-                    <h3>Inscription</h3>
-                    <div>
-                        <label for="inputCrtUser">Pseudo:</label>
-                        <input type="text" name="inputCrtUser">
-                    </div>
-                    <div>
-                        <label for="inputCrtPassword">Mot de passe:</label>
-                        <input class="switchPassword" type="password" name="inputCrtPassword"><p class="indicatorSwitch"><img src="img/cadenas-verrouille.png"></p>
-                    </div>
-                    <div><p>Se connecter à une session:</p></div>
-                    <div>
-                        <label for="newAccountForSessionActive">Session:</label>
-                        <input type="text" name="newAccountForSessionActive">
-                    </div>
-                    <div><p>Ou créer une session:</p></div>
-                    <div>
-                        <label for="newAccountForNewSession">Session:</label>
-                        <input type="text" name="newAccountForNewSession">
-                    </div>
-                    <button type="submit">Créer un compte</button>
-                </form>
+                <div class="formOption">
+                    <form class="formLogin" method="post" action="login.php">
+                        <h3>Inscription</h3>
+                        <div>
+                            <label for="inputCrtUser">Pseudo:</label>
+                            <input type="text" name="inputCrtUser">
+                        </div>
+                        <div>
+                            <label for="inputCrtPassword">Mot de passe:</label>
+                            <input class="switchPassword" type="password" name="inputCrtPassword"><p class="indicatorSwitch"><img src="img/cadenas-verrouille.png"></p>
+                        </div>
+                        <button type="submit">Créer un compte</button>
+                    </form>
+                    <form class="formLogin" action="login.php" method="post">
+                        <h3>Message au support</h3>
+                        <div>
+                            <label for="emailForSupport">Votre Email:</label>
+                            <input type="text" name="emailForSupport" required>
+                        </div>
+                        <div>
+                            <label for="messageForSupport">Votre message:</label>
+                            <textarea name="messageForSupport" maxlength="250" cols="20" required></textarea>
+                        </div>
+                        <button type="submit">Envoyer</button>
+                        <div class="alert">
+                            <?php 
+
+                            if(isset($_SESSION['errorMessageSupport'])){
+                                echo '<p>'. $_SESSION['errorMessageSupport'] .'</p>';
+                                unset($_SESSION['errorMessageSupport']);
+                            };
+
+                            ?>
+                        </div>
+                    </form>
+                </div>
             </main>
             <?php else: ?>
                 <?php header("Refresh:0; url=index.php"); ?>
@@ -93,12 +107,12 @@
             <h3>Connexion</h3>
             <div>
                 <label for="inputUser">Pseudo:</label>
-                <input type="text" name="inputUser">
+                <input type="text" name="inputUser" <?php if(isset($_SESSION['placeholderPseudo'])){ echo 'value="'. $_SESSION['placeholderPseudo'] .'"';} ?>>
             </div>
             <div>
                 <label for="inputPassword">Mot de passe:</label>
                 <div>
-                <input class="switchPassword" type="password" name="inputPassword"><p class="indicatorSwitch"><img src="img/cadenas-verrouille.png"></p>
+                <input class="switchPassword" type="password" name="inputPassword" <?php if(isset($_SESSION['placeHolderpass'])){ echo 'value="'. $_SESSION['placeHolderpass'] .'"';} ?>><p class="indicatorSwitch"><img src="img/cadenas-verrouille.png"></p>
                 </div>
             </div>
             <div><p>Se connecter à une session:</p></div>
@@ -114,6 +128,15 @@
             <button type="submit">Connexion</button>
             <div class='alert'>
                 <?php
+
+                if(isset($_SESSION['placeholderPseudo'])){
+                    unset($_SESSION['placeholderPseudo']);
+                };
+
+                if(isset($_SESSION['placeHolderpass'])){
+                    unset($_SESSION['placeHolderpass']);
+                };
+
                 if(isset($_SESSION['userActive'])){
                     unset($_SESSION['userActive']);
                 };
@@ -153,79 +176,66 @@
                 ?>
             </div>
         </form>
-        <form class="formLogin" method="post" action="index.php">
-            <h3>Inscription</h3>
-            <div>
-                <label for="inputCrtUser">Pseudo:</label>
-                <input type="text" name="inputCrtUser">
-            </div>
-            <div>
-                <label for="inputCrtPassword">Mot de passe:</label>
+        <div class="formOption">
+            <form class="formLogin" method="post" action="index.php">
+                <h3>Inscription</h3>
                 <div>
-                <input class="switchPassword" type="password" name="inputCrtPassword"><p class="indicatorSwitch"><img src="img/cadenas-verrouille.png"></p>
+                    <label for="inputCrtUser">Pseudo:</label>
+                    <input type="text" name="inputCrtUser">
                 </div>
-            </div>
-            <div><p>Se connecter à une session:</p></div>
-            <div>
-                <label for="newAccountForSessionActive">Session:</label>
-                <input type="text" name="newAccountForSessionActive">
-            </div>
-            <div><p>Ou créer une session:</p></div>
-            <div>
-                <label for="newAccountForNewSession">Session:</label>
-                <input type="text" name="newAccountForNewSession">
-            </div>
-            <button type="submit">Créer un compte</button>
-            <div class="alert">
-                <?php
-                if(isset($_SESSION['errorDoubleInputCrt'])){
-                    echo '<p>'. $_SESSION['errorDoubleInputCrt'] .'</p>';
-                    unset($_SESSION['errorDoubleInputCrt']);
-                }
+                <div>
+                    <label for="inputCrtPassword">Mot de passe:</label>
+                    <div>
+                    <input class="switchPassword" type="password" name="inputCrtPassword"><p class="indicatorSwitch"><img src="img/cadenas-verrouille.png"></p>
+                    </div>
+                </div>
+                <button type="submit">Créer un compte</button>
+                <div class="alert">
+                    <?php
 
-                if(isset($_SESSION['errorSessionIsActiveCrt'])){
-                    echo '<p>'. $_SESSION['errorSessionIsActiveCrt'] .'</p>';
-                    unset($_SESSION['errorSessionIsActiveCrt']);
-                }
+                    if(isset($_SESSION['errorCrtUser'])){
+                        echo '<p>'. $_SESSION['errorCrtUser'] .'</p>';
+                        unset($_SESSION['errorCrtUser']);
+                    }
 
-                if(isset($_SESSION['errorUserAlreadyExists'])){
-                    echo '<p>'. $_SESSION['errorUserAlreadyExists'] .'</p>';
-                    unset($_SESSION['errorUserAlreadyExists']);
-                }
+                    if(isset($_SESSION['errorCrtPassword'])){
+                        echo '<p>'. $_SESSION['errorCrtPassword'] .'</p>';
+                        unset($_SESSION['errorCrtPassword']);
+                    }
 
-                if(isset($_SESSION['errorSessionCrt'])){
-                    echo '<p>'. $_SESSION['errorSessionCrt'] .'</p>';
-                    unset($_SESSION['errorSessionCrt']);
-                }
-                ?>
-            </div>
-        </form>
+                    if(isset($_SESSION['errorUserAlreadyExists'])){
+                        echo '<p>'. $_SESSION['errorUserAlreadyExists'] .'</p>';
+                        unset($_SESSION['errorUserAlreadyExists']);
+                    }
+
+                    ?>
+                </div>
+            </form>
+            <form class="formLogin" action="login.php" method="post">
+                <h3>Message au support</h3>
+                <div>
+                    <label for="emailForSupport">Votre Email:</label>
+                    <input type="text" name="emailForSupport" required>
+                </div>
+                <div>
+                    <label for="messageForSupport">Votre message:</label>
+                    <textarea name="messageForSupport" maxlength="250" cols="20" required></textarea>
+                </div>
+                <button type="submit">Envoyer</button>
+                <div class="alert">
+                    <?php 
+
+                    if(isset($_SESSION['errorMessageSupport'])){
+                        echo '<p>'. $_SESSION['errorMessageSupport'] .'</p>';
+                        unset($_SESSION['errorMessageSupport']);
+                    };
+
+                    ?>
+                </div>
+            </form>
+        </div>
     </main>
     <?php endif; ?>
-    <footer>
-        <form class="formLogin" action="login.php" method="post">
-            <h3>Message au support</h3>
-            <div>
-                <label for="emailForSupport">Email:</label>
-                <input type="text" name="emailForSupport" required>
-            </div>
-            <div>
-                <label for="messageForSupport">Votre message:</label>
-                <textarea name="messageForSupport" maxlength="250" cols="20" required></textarea>
-            </div>
-            <button type="submit">Envoyer</button>
-            <div class="alert">
-                <?php 
-                
-                if(isset($_SESSION['errorMessageSupport'])){
-                    echo '<p>'. $_SESSION['errorMessageSupport'] .'</p>';
-                    unset($_SESSION['errorMessageSupport']);
-                };
-                
-                ?>
-            </div>
-        </form>
-    </footer>
     <script type="module" src="login.js"></script>
 </body>
 </html>

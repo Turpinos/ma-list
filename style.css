@@ -31,6 +31,7 @@ h1{
     margin-inline: auto;
     width: 90%;
     font-size: 1rem;
+    padding-bottom: 1rem;
 }
 
 #sectionSpec div{
@@ -63,6 +64,37 @@ h1{
     width: 1.25rem;
     border-radius: 1rem;
     margin-left: 0.2rem;
+}
+
+#sectionSpec #addFormSpec{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#sectionSpec #addFormSpec input{
+    height: 1.5rem;
+    border: 1px black solid;
+
+}
+
+#sectionSpec #addFormSpec button{
+    font-size: 1rem;
+    padding: 0.5rem;
+    margin-left: 0.5rem;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.467);
+    background-color: rgb(93, 175, 111);
+    color: white;
+    border: none;
+    transition: all 150ms;
+}
+
+#sectionSpec #addFormSpec button:hover{
+    background-color: rgb(62, 140, 79);
+}
+
+#sectionSpec #addFormSpec button:active{
+    transform: scale(0.95);
 }
 
 /*________________________/Style section spec____________________________________________________________*/
@@ -532,10 +564,19 @@ footer #download:active{
 .mainLogin{
     display: flex;
     flex-direction: column;
+    height: 90vh;
+}
+
+.mainLogin .formOption{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 40%;
 }
 
 .formLogin{
-    margin: 2rem auto;
+    margin: auto auto;
     padding: 1rem;
     display: flex;
     flex-direction: column;
@@ -669,8 +710,6 @@ footer #download:active{
 .mainLogin{
     flex-direction: row;
 }
-
-
 
 #mainIndex{
     flex-direction: row;

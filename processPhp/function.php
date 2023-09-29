@@ -5,7 +5,7 @@ require_once('initBDD.php');
 if(isset($_POST['inputUser']) && isset($_POST['inputPassword'])){
    if(!isset($_SESSION['userActive'])){
        foreach($users as $user){
-           if($user['userName'] == $_POST['inputUser'] && $user['userKey'] == $_POST['inputPassword']){
+           if($user['userName'] == $_POST['inputUser'] && password_verify($_POST['inputPassword'], $user['userKey'])){
                   $_SESSION['userActive'] = $user['userName'];
            }
        }   
@@ -55,13 +55,19 @@ if(isset($_POST['inputUser']) && isset($_POST['inputPassword'])){
 //Validation de connexion pour une creation de compte..
 if(isset($_POST['inputCrtUser'])){
        $inputCrtUser = validInput($_POST['inputCrtUser']);
+       if(empty($inputCrtUser)){
+              $_SESSION['errorCrtUser'] = 'Votre pseudo contient des caractères inutilisables';
+       }
 }
 
 if(isset($_POST['inputCrtPassword'])){
        $inputCrtPassword = validInput($_POST['inputCrtPassword']);
+       if(empty($inputCrtPassword)){
+              $_SESSION['errorCrtPassword'] = 'Votre mot de passe contient des caractères inutilisables';
+       }
 }
 
-if(isset($inputCrtUser) && isset($inputCrtPassword)){
+if(isset($inputCrtUser) && isset($inputCrtPassword) && !empty($inputCrtUser) && !empty($inputCrtPassword)){
        
        foreach($users as $user){
            if($user['userName'] == $_POST['inputCrtUser']){
@@ -70,52 +76,16 @@ if(isset($inputCrtUser) && isset($inputCrtPassword)){
        }   
        
        if(!isset($_SESSION['errorUserAlreadyExists'])){
-              $_SESSION['userActive'] = $_POST['inputCrtUser'];
+              $_SESSION['placeholderPseudo'] = $inputCrtUser;
+              $_SESSION['placeHolderpass'] = $inputCrtPassword;
               $addUser = $mySqlConnection -> prepare('INSERT INTO `users`(`userName`, `userKey`) VALUES (:userName, :userKey)');
               $addUser -> execute([
-                     'userName' => $_POST['inputCrtUser'],
-                     'userKey' => $_POST['inputCrtPassword']
+                     'userName' => $inputCrtUser,
+                     'userKey' => password_hash($inputCrtPassword, PASSWORD_DEFAULT)
               ]);
-              $addUser -> fetchAll();
-       }
-
-       //Validation du choix ou creation de session..
-       if(!empty($_POST['newAccountForSessionActive']) && !empty($_POST['newAccountForNewSession'])){
-              $_SESSION['errorDoubleInputCrt'] = 'Vous ne pouvez pas vous connectez et créer une session en même temps.';
-       }else if(!empty($_POST['newAccountForSessionActive'])){
-              foreach($sessionsUsers as $validSession){
-                     if($validSession['sessionKey'] == $_POST['newAccountForSessionActive']){
-                            $_SESSION['sessionActive'] = $validSession['sessionKey'];
-                            $_SESSION['nameModerator'] = $validSession['UserSession'];
-                     }
-              }
-       }else if(!empty($_POST['newAccountForNewSession'])){
-              foreach($sessionsUsers as $validSession){
-                     if($validSession['sessionKey'] == $_POST['newAccountForNewSession']){
-                            $_SESSION['errorSessionIsActiveCrt'] = "La session existe déjà.";
-                     }
-              }
-              $newAccountForNewSession = validInput($_POST['newAccountForNewSession']);
-              if(!isset($_SESSION['errorSessionIsActiveCrt']) && !empty($newAccountForNewSession) && isset($_SESSION['userActive'])){
-                     $_SESSION['sessionActive'] = $newAccountForNewSession;
-                     $_SESSION['nameModerator'] = $_SESSION['userActive'];
-
-                     $sessionAttri = $mySqlConnection->prepare('INSERT INTO `attributions` (`userName`, `sessionKey`) VALUES (:userName , :sessionKey)');
-                     $sessionAttri->execute([
-                            'userName' => $_SESSION['userActive'],
-                            'sessionKey' => $newAccountForNewSession
-                     ]);
-                     $sessionAttri->fetchAll();
-
-                     $addNewSession = $mySqlConnection -> prepare('INSERT INTO `sessionsusers`(`sessionKey`, `UserSession`) VALUES (:sessionKey, :UserSession)');
-                     $addNewSession -> execute([
-                            'sessionKey' => $newAccountForNewSession,
-                            'UserSession' => $_SESSION['userActive']
-                     ]);
-                     $addNewSession -> fetchAll();
-              }
        }
 }
+
     
 if(isset($_POST['inputUser']) && !isset($_SESSION['userActive'])){
        if($_SERVER['PHP_SELF'] == '/ma-liste/index.php'){
@@ -132,13 +102,6 @@ if(isset($_POST['AccountActiveForSessionActive']) && !isset($_SESSION['sessionAc
        }
 }
 
-if(isset($_POST['newAccountForSessionActive']) && !isset($_SESSION['sessionActive'])){
-       if(!isset($_SESSION['errorDoubleInput'])){
-              if($_SERVER['PHP_SELF'] == '/ma-liste/index.php'){
-                     $_SESSION['errorSessionCrt'] = 'Il y a une erreur avec le nom de session.';
-              }
-       }
-}
 
 //Info attributions
 
@@ -173,6 +136,51 @@ if(isset($_POST['delFormSpec'])){
               'userName' => validInput($_POST['delFormSpec']),
               'sessionKey' => $_SESSION['sessionActive']
        ]);
+}
+
+//Ajouter attribution..
+
+if(isset($_POST['addFromSpec'])){
+
+      $newSpec = validInput($_POST['addFromSpec']);
+
+      $reelUser = false;
+       foreach($users as $user){
+
+              if($user['userName'] == $newSpec){
+
+                     $reelUser = true;
+
+                     $attrib = $mySqlConnection->prepare('SELECT `userName` FROM `attributions` WHERE sessionKey = (:sessionKey) ORDER BY `userName`');
+                     $attrib->execute([
+                         'sessionKey' => $_SESSION['sessionActive']
+                     ]);
+                     $Specs = $attrib->fetchAll(PDO::FETCH_ASSOC);
+
+                     
+                     $attributionAlreadyExist = false;
+                     foreach($Specs as $spec){
+                            if($spec['userName'] == $newSpec){
+                                   $attributionAlreadyExist = true;
+                            }
+                     }
+                     if(!$attributionAlreadyExist){
+                            $newAttribution = $mySqlConnection->prepare('INSERT INTO `attributions` (`userName`, `sessionKey`) VALUES (:userName, :sessionKey)');
+                            $newAttribution->execute([
+                                   'userName' => $newSpec,
+                                   'sessionKey' => $_SESSION['sessionActive']
+                            ]);
+                     }//Afficher maintenant les messages d'erreurs..
+                     
+                     if($attributionAlreadyExist){
+                            $errorDoublon = 'Ce spectateur se trouve déjà dans la liste';
+                     }
+              }
+       }
+
+       if(!$reelUser){
+              $uncaughtUser = 'Ce pseudo n\'existe pas';
+       }
 }
 
 
