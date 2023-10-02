@@ -78,7 +78,7 @@
                         <h3>Message au support</h3>
                         <div>
                             <label for="emailForSupport">Votre Email:</label>
-                            <input type="text" name="emailForSupport" required>
+                            <input type="email" name="emailForSupport" required>
                         </div>
                         <div>
                             <label for="messageForSupport">Votre message:</label>
@@ -215,7 +215,7 @@
                 <h3>Message au support</h3>
                 <div>
                     <label for="emailForSupport">Votre Email:</label>
-                    <input type="text" name="emailForSupport" required>
+                    <input type="email" name="emailForSupport" required>
                 </div>
                 <div>
                     <label for="messageForSupport">Votre message:</label>
