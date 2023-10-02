@@ -173,13 +173,13 @@ if(isset($_POST['addFromSpec'])){
                      }//Afficher maintenant les messages d'erreurs..
                      
                      if($attributionAlreadyExist){
-                            $errorDoublon = 'Ce spectateur se trouve déjà dans la liste';
+                            $_SESSION['errorDoublon'] = 'Ce spectateur se trouve déjà dans la liste';
                      }
               }
        }
 
        if(!$reelUser){
-              $uncaughtUser = 'Ce pseudo n\'existe pas';
+              $_SESSION['uncaughtUser'] = 'Ce pseudo n\'existe pas';
        }
 }
 

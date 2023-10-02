@@ -21,32 +21,6 @@ require_once('processPhp/receptionBDD.php');
             <h1>Ma liste</h1>
         </div>
     </header>
-    <?php if(isset($_SESSION['userActive']) && isset($_SESSION['sessionActive'])): ?>
-        <section id="sectionSpec">
-            <h2>Spectateurs</h2>
-            <div id="spec">
-                <?php foreach($listSpec as $spec): ?>
-                    <?php if($spec['userName'] != $_SESSION['nameModerator']): ?>
-                        <form action="index.php" method="post">
-                            <input type="hidden" name="delFormSpec" value="<?php echo $spec['userName'] ?>">
-                            <button class="spec" type="submit"><?php echo '<p>'. $spec['userName'] .'</p>' ?><img src="img/fermer.png" alt="supprimer"></button>
-                            <!-- comfirmation de supp en js comme pour les btn de sauvegarde et d'import ajouter form pour ajout spec-->
-                        </form>
-                    <?php else: ?>
-                        <p class="host"><?php echo $spec['userName'] ?>(hôte)</p>
-                    <?php endif; ?>
-                <?php endforeach; ?>
-            </div>
-            <form id="addFormSpec" action="index.php" method="post">
-                <input type="text" name="addFromSpec" required>
-                <button type="submit">Ajouter</button>
-            </form>
-            <div class='alert'>
-                <?php if(isset($errorDoublon)){ echo '<p>'. $errorDoublon .'</p>';} ?>
-                <?php if(isset($uncaughtUser)){ echo '<p>'. $uncaughtUser .'</p>';} ?>
-            </div>
-        </section>
-    <?php endif; ?>
     <main id="mainIndex">
         <?php if(isset($_SESSION['userActive']) && isset($_SESSION['sessionActive'])): ?>
             <section id="list">
@@ -73,18 +47,6 @@ require_once('processPhp/receptionBDD.php');
                 <div id="items">
                 </div>
             </section>
-            <section id='calculatrice'>
-                <h2>Calculatrice</h2>
-                <form>
-                    <div>
-                        <label id="labelSelect" for="calcItems">Sélection:</label>
-                        <select id="calcItems" name="calcItems">
-                        </select>
-                    </div>
-                    <button type="button" id="buttonCalc">Calculer</button>
-                </form>
-                <div id="result"></div>
-            </section>
             <section id="participation">
                 <h2>Participation</h2>
                 <?php if($_SESSION['nameModerator'] == $_SESSION['userActive']): ?>
@@ -97,6 +59,44 @@ require_once('processPhp/receptionBDD.php');
                 </form>
                 <?php endif; ?>
                 <div id="participants"></div>
+            </section>
+            <section id="sectionSpec">
+                <h2>Spectateurs</h2>
+                <div id="spec">
+                    <?php foreach($listSpec as $spec): ?>
+                        <?php if($spec['userName'] != $_SESSION['nameModerator']): ?>
+                            <form action="index.php" method="post">
+                                <input type="hidden" name="delFormSpec" value="<?php echo $spec['userName'] ?>">
+                                <button class="spec" type="submit"><?php echo '<p>'. $spec['userName'] .'</p>' ?><img src="img/fermer.png" alt="supprimer"></button>
+                                <!-- comfirmation de supp en js comme pour les btn de sauvegarde et d'import ajouter form pour ajout spec-->
+                            </form>
+                        <?php else: ?>
+                            <p class="host"><?php echo $spec['userName'] ?>(hôte)</p>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </div>
+                <form id="addFormSpec" action="index.php" method="post">
+                    <input type="text" name="addFromSpec" required>
+                    <button type="submit">Ajouter</button>
+                </form>
+                <div class='alert'>
+                    <?php if(isset($_SESSION['errorDoublon'])){ echo '<p>'. $_SESSION['errorDoublon'] .'</p>';
+                    unset($_SESSION['errorDoublon']);} ?>
+                    <?php if(isset($_SESSION['uncaughtUser'])){ echo '<p>'. $_SESSION['uncaughtUser'] .'</p>';
+                    unset($_SESSION['uncaughtUser']);} ?>
+                </div>
+                <div id='setting'>
+                    <form class="formSession " action="index.php" method="post">
+                        <input type="hidden" name="deleteSession" value="delete">
+                        <input type="password" name="ConfDeleteSession">
+                        <button id="boutonSession" type="submit">Supprimer la session</button>
+                    </form>
+                    <form class="formAccount" action="index.php" method="post">
+                        <input type="hidden" name="deleteAccount" value="delete">
+                        <input type="password" name="ConfDeleteAccount">
+                        <button id="boutonCompte" type="submit">Supprimer le compte</button>
+                    </form>
+                </div>
             </section>
         <?php else:
             header("Refresh:0; url=login.php"); ?>

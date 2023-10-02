@@ -9,10 +9,9 @@ let savedItems;
 let totalItems;
 let localParticipants;
 let addTotal;
+let buttonDelSession = document.querySelector('#boutonSession');
+let buttonDelAccount = document.querySelector('#boutonCompte');
 
-let valueChoice = [];
-let arrayChoice = []; 
-//let select;
 let NoSavedItems;
 
 //Recuperation form "Ma liste"..
@@ -42,10 +41,6 @@ function loadDoc(){
         p.style.textAlign = 'center';
         p.innerText = 'Aucun élément pour le moment.';
         document.getElementById('items').appendChild(p);
-
-        let select = document.createElement('option');
-        select.innerText = 'Aucun élément pour le moment:';
-        document.getElementById('calcItems').appendChild(select);
 
         addTotal = 0;
 
@@ -79,14 +74,7 @@ function loadDoc(){
 
         for(let elements of localItems){
 
-            addTotal = addTotal + (elements['price']*elements['qte']);
-            
-            let select = document.createElement('option');
-            select.setAttribute('data-title', elements['title']);
-            select.setAttribute('data-price', elements['price']);
-            select.setAttribute('data-qte', elements['qte'])
-            select.innerText = `${elements['title']}`;
-            document.getElementById('calcItems').appendChild(select);
+            addTotal = addTotal + (elements['price'] * elements['qte']);
 
             let row = document.createElement('tr');
             body.appendChild(row);
@@ -169,7 +157,6 @@ function addItem(){
 
         localStorage.setItem(NoSavedItems, JSON.stringify(localItems));
 
-        document.getElementById('calcItems').innerText = '';
         document.getElementById('items').innerText = '';
         document.getElementById('participants').innerText = '';
         loadDoc();
@@ -239,168 +226,11 @@ function deleteItem(valueOf){
     localItems.splice(valueOf,1);
     localStorage.setItem(NoSavedItems, JSON.stringify(localItems));
 
-    document.getElementById('calcItems').innerText = '';
     document.getElementById('items').innerText = '';
     document.getElementById('participants').innerText = '';
     loadDoc();
     loadParticipants();
 
-}
-
-//________________________________________________________Calculatrice 1/2______________.
-
-//Affiche calulatrice et parametrage..
-function addCalcItem(){
-
-    let divTotalChoice = document.createElement('div');
-    divTotalChoice.setAttribute('class', 'divChoice');
-    divTotalChoice.style.background = 'rgb(200, 252, 208)';
-    divTotalChoice.style.justifyContent = 'space-around';
-
-    let keyTotalChoice = document.createElement('p');
-    keyTotalChoice.innerText = 'Total';
-    divTotalChoice.appendChild(keyTotalChoice);
-
-    let numTotalChoice = document.createElement('p');
-    let addChoicePrice = 0;
-
-   let indexCalc = 0;
-
-   for(let choiceItem of arrayChoice){
-
-        addChoicePrice = addChoicePrice + (choiceItem['value'] * choiceItem['qte']);
-
-        let pChoiceName = document.createElement('p');
-        pChoiceName.style.width = '10rem';
-        pChoiceName.innerText = `${choiceItem['title']}`;
-
-        let pChoicePrice = document.createElement('p');
-        pChoicePrice.innerText = `${choiceItem['value']}€`;
-        pChoicePrice.setAttribute('data-value', indexCalc);
-        let indexValue = pChoicePrice.getAttribute('data-value');
-
-        //Modification de la valeur à 0 ou négative. 
-        pChoicePrice.addEventListener('click', function(){
-
-            if(choiceItem['value'] > '0'){
-
-                choiceItem['value'] = '0';
-                document.getElementById('result').innerHTML = '';
-                addCalcItem();
-
-            }else if(choiceItem['value'] == 0){
-
-                choiceItem['value'] = valueChoice[indexValue]['value'];
-                document.getElementById('result').innerHTML = '';
-                addCalcItem();
-
-            }else if(choiceItem['value'] < 0){
-
-                choiceItem['value'] = '0';
-                document.getElementById('result').innerHTML = '';
-                addCalcItem();
-
-            }
-
-        });
-
-        let pChoiceQte = document.createElement('p');
-        pChoiceQte.innerText = `x${choiceItem['qte']}`;
-        pChoiceQte.addEventListener('click', function(){
-            choiceItem['qte'] = parseInt(choiceItem['qte']) - 1;
-            document.getElementById('result').innerHTML = '';
-            addCalcItem();
-        });
-
-        let delChoice = document.createElement('p');
-        delChoice.setAttribute('class', 'delCalculate');
-        delChoice.setAttribute('id', indexCalc);
-
-        //Evenement click..
-        delChoice.addEventListener('click', function(){
-            arrayChoice.splice(delChoice.getAttribute('id'), 1);
-            valueChoice.splice(delChoice.getAttribute('id'), 1);
-            document.getElementById('result').innerHTML = '';
-            addCalcItem();
-        });
-
-        let imgDel = document.createElement('img');
-        imgDel.setAttribute('src', 'img/fermer.png');
-        imgDel.setAttribute('alt', 'supprimer l\'élément');
-        imgDel.style.width = '100%';
-        delChoice.appendChild(imgDel);
-
-        let divChoice = document.createElement('div');
-        divChoice.setAttribute('class', 'divChoice');
-        divChoice.appendChild(pChoiceName);
-        divChoice.appendChild(pChoiceQte);
-        divChoice.appendChild(pChoicePrice);
-        divChoice.appendChild(delChoice);
-        document.getElementById('result').appendChild(divChoice);
-
-        indexCalc++;
-    }
-
-    if(arrayChoice.length != 0){
-        numTotalChoice.innerText = `${addChoicePrice}€`;
-        divTotalChoice.appendChild(numTotalChoice);
-        document.getElementById('result').appendChild(divTotalChoice);
-    }
-
-}
-
-//________________________________________________________Calculatrice 2/2______________.
-
-//Preparation de la liste des elements a calculer..
-function calculateItems(choice){
-
-    let choiceIndex =  choice.selectedIndex;
-
-    let choiceTitle = choice.options[choiceIndex].dataset.title;
-    let choicePrice = choice.options[choiceIndex].dataset.price;
-    let choiceQte = choice.options[choiceIndex].dataset.qte;
-    let firstDouble = false;
-    let secondDouble = false;
-
-    //Verification doublon 1er array, si l'element existe dans la calulatrice, alors on ajoute un a la qte, sinon on ajoute simplement l'element..
-    for(let elements of valueChoice){
-        if(elements['title'] == choiceTitle){
-            firstDouble = true;
-        }
-    }
-
-    if(!firstDouble){
-
-        let doublenewChoice = {
-            title: choiceTitle,
-            value: choicePrice,
-            qte: choiceQte
-        };
-    
-        valueChoice.push(doublenewChoice);
-    }
-
-    //Verification doublon 2eme array, si l'element existe dans la calulatrice, alors on ajoute un a la qte, sinon on ajoute simplement l'element..
-    for(let elements of arrayChoice){
-        if(elements['title'] == choiceTitle){
-            elements['qte'] = parseInt(elements['qte']) + 1;
-            secondDouble = true;
-        }
-    }
-
-    if(!secondDouble){
-
-        let newChoice = {
-            title: choiceTitle,
-            value: choicePrice,
-            qte: choiceQte
-        };
-       
-        arrayChoice.push(newChoice);
-    }
-   
-   document.getElementById('result').innerHTML = '';
-   addCalcItem();
 }
 
 //_________________________________________Section participants____________________________________________..
@@ -675,16 +505,6 @@ window.addEventListener('DOMContentLoaded', function(){
         };
     })
 
-    //Calcule d'items..
-    document.getElementById('buttonCalc').addEventListener('click', function(e){
-        if(localItems.length != 0){
-            let choice = document.querySelector('#calcItems');
-            calculateItems(choice);
-        }else{
-            e.preventDefault();
-        }
-    });
-
     //Ajout de participants..
     if(buttonParticipant != null){
         buttonParticipant.addEventListener('click', function(){
@@ -692,6 +512,32 @@ window.addEventListener('DOMContentLoaded', function(){
         });
     };
 
+    //Timing msg erreur..
+    let erreurMsg = document.querySelector('.alert');
+    if( erreurMsg.childElementCount != 0){
+        setTimeout(() => {
+            erreurMsg.style.display = 'none';
+    }, 3000);
+    }else{
+        erreurMsg.style.display = 'none';
+    }
+
+    //Delete compte..
+    let formDelAccount = document.querySelector('.formAccount');
+
+    buttonDelAccount.addEventListener('click', function(e){
+
+        console.log(formDelAccount.getAttribute('class'));
+        if(formDelAccount.getAttribute('class') == 'formAccount'){
+            e.preventDefault();
+            formDelAccount.classList.add('formConfAccount');
+        }else if(formDelAccount.getAttribute('class') == 'formAccount formConfAccount' && document.querySelector('.formAccount input:nth-of-type(2)').value == ""){
+            e.preventDefault();
+            formDelAccount.classList.remove('formConfAccount');
+        }else{
+            e.preventDefault();
+        }
+
+    });
+
 });
-
-

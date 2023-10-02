@@ -28,24 +28,26 @@ h1{
 
 /*________________________Style section spec____________________________________________________________*/
 #sectionSpec{
-    margin-inline: auto;
-    width: 90%;
     font-size: 1rem;
     padding-bottom: 1rem;
 }
 
 #sectionSpec div{
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    padding-block: 0.5rem;
 }
 
 #sectionSpec div .host{
     color: #5588D4;
     font-weight: 500;
+    margin-block: 0.5rem;
 }
 
 #sectionSpec div .spec{
+    margin-block: 0.5rem;
     display: flex;
     align-items: center;
     font-size: 1rem;
@@ -60,10 +62,19 @@ h1{
 }
 
 #sectionSpec div .spec img{
-    background-color: rgb(249, 40, 40);
+    background-color: rgb(255, 111, 111);
     width: 1.25rem;
     border-radius: 1rem;
     margin-left: 0.2rem;
+    transition: all 200ms;
+}
+
+#sectionSpec div .spec img:hover{
+    background-color: rgb(249, 76, 76);
+}
+
+#sectionSpec div .spec img:active{
+    background-color: rgb(249, 40, 40);
 }
 
 #sectionSpec #addFormSpec{
@@ -95,6 +106,59 @@ h1{
 
 #sectionSpec #addFormSpec button:active{
     transform: scale(0.95);
+}
+
+#sectionSpec .alert p{
+    text-align: center;
+}
+
+#setting{
+    margin-top: 2rem;
+    border-top: 1px rgb(199, 199, 199) solid;
+}
+
+.formSession{
+    margin-block: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    overflow: hidden;
+    height: 1.5rem;
+}
+
+.formConfSession{
+    height: 5rem;
+    transition: all 200ms;
+}
+
+.formAccount{
+    margin-block: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    overflow: hidden;
+    height: 1.5rem;
+    transition: all 200ms;
+}
+
+.formConfAccount{
+    height: 5rem;
+    transition: all 200ms;
+}
+
+#setting form button{
+    margin-top: 1rem;
+    background: none;
+    border: none;
+    color: rgb(255, 111, 111);
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 200ms;
+}
+
+#setting form button:hover{
+    color: rgb(249, 40, 40);
+    transform: scale(1.05);
 }
 
 /*________________________/Style section spec____________________________________________________________*/
@@ -184,7 +248,7 @@ h2{
     width: 100%;
     display: flex;
     justify-content: space-evenly;
-    margin-block: 1.25rem;
+    margin-bottom: 0.75rem;
 }
 
 #list form div div{
@@ -231,102 +295,14 @@ h2{
     transform: scale(0.95);
 }
 
-/*______________________________________Calculatrice section_____________________________________________*/
-
-#calculatrice form{
-    width: 100%;
-    display: flex;
-    justify-content: space-evenly;
-}
-
-#calculatrice form div{
-    width: auto;
-    display: flex;
-    align-items: center;
-}
-
-#calculatrice form div select{
-    height: 1.8rem;
-    margin-inline: 1rem;
-    border: 1px black solid;
-}
-
-#calculatrice form div select option{
-    color: rgb(66, 66, 66);
-}
-
-#calculatrice form label{
-    display: none;
-}
-
-#calculatrice button{
-    width: auto;
-    font-size: 1rem;
-    padding: 0.5rem;
-    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.467);
-    background-color: rgb(93, 175, 111);
-    color: white;
-    border: none;
-    transition: all 100ms;
-}
-
-#calculatrice button:hover{
-    background-color: rgb(62, 140, 79);
-}
-
-#calculatrice button:active{
-    transform: scale(0.95);
-}
-
-#calculatrice form select{
-    min-width: 5rem;
-    height: 1.5rem;
-    border: 1px black solid;
-}
-
-#result{
-    margin-top: 2rem;
-    padding-inline: 5%;
-}
-
-.divChoice{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    width: 100%;
-    height: 1.5rem;
-    margin-block: 0.5rem;
-}
-
-.divChoice:nth-child(even){
-    background-color: rgb(240, 253, 242);
-}
-
-.divChoice p{
-    margin: 0;
-    font-weight: 500;
-}
-
-.delCalculate{
-    width: 1.5rem;
-    border-radius: 1.5rem;
-    background: rgb(255, 111, 111);
-}
-
-.delCalculate:hover{
-    background-color: rgb(249, 76, 76);
-}
-
-.delCalculate:active{
-    background-color: rgb(249, 40, 40);
-}
-
 /*__________________________________________Participants section________________________________________________*/
 
 #participation form{
     width: 100%;
+    margin-block: 1rem;
     display: flex;
     justify-content: space-evenly;
+    align-items: center;
 }
 
 #participation form label{
@@ -698,11 +674,7 @@ footer #download:active{
     display: inline;
     margin-right: 0.5rem;
 }
-        
-#calculatrice form label{
-    display: block;
-    margin-right: 0.5rem;
-}
+
 }
 
 @media screen and (min-width: 1200px) {
@@ -713,23 +685,26 @@ footer #download:active{
 
 #mainIndex{
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: space-evenly;
     align-items: unset;
 }
 
 section:nth-of-type(1){
-    width: 33%;
+    width: 35%;
     height: 100%;
 }
 
 section:nth-of-type(2){
-    width: 28%;
+    width: 35%;
     height: 100%;
 }
 
 section:nth-of-type(3){
-    width: 33%;
+    width: 15%;
+    min-width: 16rem;
     height: 100%;
+    box-shadow: none;
+    border-left: 2px rgb(93, 175, 111) solid;
 }
 
 #list form label{
@@ -754,11 +729,6 @@ section:nth-of-type(3){
     
            
 #participation form label{
-    display: none;
-    margin-right: 0.5rem;
-}
-        
-#calculatrice form label{
     display: none;
     margin-right: 0.5rem;
 }
@@ -791,11 +761,6 @@ section:nth-of-type(3){
        
 #participation form label{
     display: inline;
-    margin-right: 0.5rem;
-}
-    
-#calculatrice form label{
-    display: block;
     margin-right: 0.5rem;
 }
 
