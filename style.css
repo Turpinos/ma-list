@@ -29,7 +29,6 @@ h1{
 /*________________________Style section spec____________________________________________________________*/
 #sectionSpec{
     font-size: 1rem;
-    padding-bottom: 1rem;
 }
 
 #sectionSpec div{
@@ -117,33 +116,43 @@ h1{
     border-top: 1px rgb(199, 199, 199) solid;
 }
 
+#setting form input{
+    height: 1.5rem;
+    border: 1px black solid;
+}
+
 .formSession{
+    border-top: 2px rgba(249, 40, 40, 0) solid;
     margin-block: 1rem;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
     overflow: hidden;
     height: 1.5rem;
+    transition: all 300ms;
 }
 
 .formConfSession{
+    border-top: 2px rgb(249, 40, 40) solid;
     height: 5rem;
-    transition: all 200ms;
+    transition: all 300ms;
 }
 
 .formAccount{
+    border-top: 2px rgba(249, 40, 40, 0) solid;
     margin-block: 1rem;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
     overflow: hidden;
     height: 1.5rem;
-    transition: all 200ms;
+    transition: all 300ms;
 }
 
 .formConfAccount{
+    border-top: 2px rgb(249, 40, 40) solid;
     height: 5rem;
-    transition: all 200ms;
+    transition: all 300ms;
 }
 
 #setting form button{
@@ -371,7 +380,7 @@ footer{
     flex-direction: column;
     align-items: center;
     font-size: 1.25rem;
-    margin-block: 4rem;
+    margin-top: 2rem;
 }
 
 footer button p{

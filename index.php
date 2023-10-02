@@ -86,14 +86,14 @@ require_once('processPhp/receptionBDD.php');
                     unset($_SESSION['uncaughtUser']);} ?>
                 </div>
                 <div id='setting'>
-                    <form class="formSession " action="index.php" method="post">
+                    <form class="formSession" action="index.php" method="post">
                         <input type="hidden" name="deleteSession" value="delete">
-                        <input type="password" name="ConfDeleteSession">
+                        <input type="password" name="ConfDeleteSession" placeholder="Mot de passe">
                         <button id="boutonSession" type="submit">Supprimer la session</button>
                     </form>
                     <form class="formAccount" action="index.php" method="post">
                         <input type="hidden" name="deleteAccount" value="delete">
-                        <input type="password" name="ConfDeleteAccount">
+                        <input type="password" name="ConfDeleteAccount" placeholder="Mot de passe">
                         <button id="boutonCompte" type="submit">Supprimer le compte</button>
                     </form>
                 </div>

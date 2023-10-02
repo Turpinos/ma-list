@@ -11,6 +11,8 @@ let localParticipants;
 let addTotal;
 let buttonDelSession = document.querySelector('#boutonSession');
 let buttonDelAccount = document.querySelector('#boutonCompte');
+let formDelAccount = document.querySelector('.formAccount');
+let formDelSession = document.querySelector('.formSession');
 
 let NoSavedItems;
 
@@ -523,17 +525,33 @@ window.addEventListener('DOMContentLoaded', function(){
     }
 
     //Delete compte..
-    let formDelAccount = document.querySelector('.formAccount');
-
     buttonDelAccount.addEventListener('click', function(e){
 
-        console.log(formDelAccount.getAttribute('class'));
         if(formDelAccount.getAttribute('class') == 'formAccount'){
             e.preventDefault();
             formDelAccount.classList.add('formConfAccount');
         }else if(formDelAccount.getAttribute('class') == 'formAccount formConfAccount' && document.querySelector('.formAccount input:nth-of-type(2)').value == ""){
             e.preventDefault();
             formDelAccount.classList.remove('formConfAccount');
+        }else if(formDelAccount.getAttribute('class') == 'formAccount formConfAccount' && document.querySelector('.formAccount input:nth-of-type(2)').value != ""){
+
+        }else{
+            e.preventDefault();
+        }
+
+    });
+
+    //Delete session..
+    buttonDelSession.addEventListener('click', function(e){
+
+        if(formDelSession.getAttribute('class') == 'formSession'){
+            e.preventDefault();
+            formDelSession.classList.add('formConfSession');
+        }else if(formDelSession.getAttribute('class') == 'formSession formConfSession' && document.querySelector('.formSession input:nth-of-type(2)').value == ""){
+            e.preventDefault();
+            formDelSession.classList.remove('formConfSession');
+        }else if(formDelSession.getAttribute('class') == 'formSession formConfSession' && document.querySelector('.formSession input:nth-of-type(2)').value != ""){
+
         }else{
             e.preventDefault();
         }
