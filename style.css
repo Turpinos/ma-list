@@ -56,10 +56,6 @@ h1{
     flex-wrap: nowrap;
 }
 
-#sectionSpec div .spec p{
-    margin: 0px;
-}
-
 #sectionSpec div .spec img{
     background-color: rgb(255, 111, 111);
     width: 1.25rem;
@@ -119,6 +115,12 @@ h1{
 #setting form input{
     height: 1.5rem;
     border: 1px black solid;
+}
+
+#setting form div{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
 }
 
 .formSession{

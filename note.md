@@ -4,3 +4,6 @@ Accorder des attributions pour accéder à une session, ajouter un champ dans ta
 
 Affichage du mdp en clair à gérer en js.
 
+Retirer la touche suppr des listes en ajoutant une variable moderator;
+Retirer aux specs le bouton import qui est inutile et l'input du participant;
+Rafraichir page spec sur base d'evennement du modo;  

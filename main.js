@@ -110,25 +110,27 @@ function loadDoc(){
 
                 }else if(i == 4){
 
-                    let tdcell = document.createElement('td');
-                    let cellule = document.createElement('div');
-                    cellule.setAttribute('class', 'delete');
-                    cellule.setAttribute('value', indexItem);
+                    if(typeof(moderator) != 'undefined'){
+                        let tdcell = document.createElement('td');
+                        let cellule = document.createElement('div');
+                        cellule.setAttribute('class', 'delete');
+                        cellule.setAttribute('value', indexItem);
 
-                    //Ecouteur d'evenement..
-                    cellule.addEventListener('click', function(){
-                        let valueOf = cellule.getAttribute('value');
-                        deleteItem(valueOf);
-                    })
-                    row.appendChild(tdcell);
+                        //Ecouteur d'evenement..
+                        cellule.addEventListener('click', function(){
+                            let valueOf = cellule.getAttribute('value');
+                            deleteItem(valueOf);
+                        })
+                        row.appendChild(tdcell);
 
-                    let img = document.createElement('img');
-                    img.setAttribute('src', 'img/fermer.png');
-                    img.setAttribute('alt', 'Supprimer l\'item');
-                    img.style.width = '100%';
-                    img.style.height = '100%';
-                    cellule.appendChild(img);
-                    tdcell.appendChild(cellule);
+                        let img = document.createElement('img');
+                        img.setAttribute('src', 'img/fermer.png');
+                        img.setAttribute('alt', 'Supprimer l\'item');
+                        img.style.width = '100%';
+                        img.style.height = '100%';
+                        cellule.appendChild(img);
+                        tdcell.appendChild(cellule);
+                    }
 
                 }
             }
@@ -335,39 +337,43 @@ function loadParticipants(){
                     input.setAttribute('id', indexItem);
                     input.style.textAlign = 'center';
                     input.style.margin = 'auto';
-                    input.style.width = '80%'
-                    input.addEventListener('blur', function(){
-                        if(input.value != ''){
-                            document.getElementById('participants').innerText = '';
-                            localParticipants[input.getAttribute('id')][1] = input.value;
-                            localParticipants[input.getAttribute('id')]['contribution'] = input.value;
-                            localStorage.setItem(`${NoSavedItems}_part`, JSON.stringify(localParticipants));
-                            loadParticipants();
-                        }
-                    });
+                    input.style.width = '80%';
+                    if(typeof(moderator) != 'undefined'){
+                        input.addEventListener('blur', function(){
+                            if(input.value != ''){
+                                document.getElementById('participants').innerText = '';
+                                localParticipants[input.getAttribute('id')][1] = input.value;
+                                localParticipants[input.getAttribute('id')]['contribution'] = input.value;
+                                localStorage.setItem(`${NoSavedItems}_part`, JSON.stringify(localParticipants));
+                                loadParticipants();
+                            }
+                        });
+                    }
                     cellule.appendChild(input);
                     row.appendChild(cellule);
 
                 }else if(i == 4){
 
-                    let tdcell = document.createElement('td')
-                    let cellule = document.createElement('div');
-                    cellule.setAttribute('class', 'delete');
-                    cellule.setAttribute('value', indexItem);
+                    if(typeof(moderator) != 'undefined'){
+                        let tdcell = document.createElement('td')
+                        let cellule = document.createElement('div');
+                        cellule.setAttribute('class', 'delete');
+                        cellule.setAttribute('value', indexItem);
 
-                    //Ecouteur d'evenement..
-                    cellule.addEventListener('click', function(){
-                        let valueOf = cellule.getAttribute('value');
-                        deletePart(valueOf);
-                    })
-                    row.appendChild(tdcell);
+                        //Ecouteur d'evenement..
+                        cellule.addEventListener('click', function(){
+                            let valueOf = cellule.getAttribute('value');
+                            deletePart(valueOf);
+                        })
+                        row.appendChild(tdcell);
 
-                    let img = document.createElement('img');
-                    img.setAttribute('src', 'img/fermer.png');
-                    img.setAttribute('alt', 'Supprimer l\'item');
-                    img.style.width = '100%';
-                    cellule.appendChild(img);
-                    tdcell.appendChild(cellule);
+                        let img = document.createElement('img');
+                        img.setAttribute('src', 'img/fermer.png');
+                        img.setAttribute('alt', 'Supprimer l\'item');
+                        img.style.width = '100%';
+                        cellule.appendChild(img);
+                        tdcell.appendChild(cellule);
+                    }
 
                 }
             }
@@ -486,26 +492,28 @@ window.addEventListener('DOMContentLoaded', function(){
     };
 
     //Evenement de synchronisation..
-    let confirmationSynchro = false;
-    let pressDownload = document.getElementById('download');
-    pressDownload.addEventListener('click', function(e){
-        if(!localStorage.getItem(NoSavedItems) && !localStorage.getItem(`${NoSavedItems}_part`)){
-            e.preventDefault();
-        }else{
-            if(confirmationSynchro){
-                localStorage.removeItem(NoSavedItems);
-                localStorage.removeItem(`${NoSavedItems}_part`)
-                window.location.reload();
+    if(typeof(pressDownload) != 'undefined'){
+        let confirmationSynchro = false;
+        let pressDownload = document.getElementById('download');
+        pressDownload.addEventListener('click', function(e){
+            if(!localStorage.getItem(NoSavedItems) && !localStorage.getItem(`${NoSavedItems}_part`)){
+                e.preventDefault();
             }else{
-                pressDownload.style.color = 'rgb(255, 78, 78)';
-                confirmationSynchro = true;
-                setTimeout(() => {
-                    pressDownload.style.color = '#5588D4';
-                    confirmationSynchro = false;
-                }, 1000);
-            }
-        };
-    })
+                if(confirmationSynchro){
+                    localStorage.removeItem(NoSavedItems);
+                    localStorage.removeItem(`${NoSavedItems}_part`)
+                    window.location.reload();
+                }else{
+                    pressDownload.style.color = 'rgb(255, 78, 78)';
+                    confirmationSynchro = true;
+                    setTimeout(() => {
+                        pressDownload.style.color = '#5588D4';
+                        confirmationSynchro = false;
+                    }, 1000);
+                }
+            };
+        })
+    }
 
     //Ajout de participants..
     if(buttonParticipant != null){
@@ -515,14 +523,35 @@ window.addEventListener('DOMContentLoaded', function(){
     };
 
     //Timing msg erreur..
-    let erreurMsg = document.querySelector('.alert');
-    if( erreurMsg.childElementCount != 0){
-        setTimeout(() => {
-            erreurMsg.style.display = 'none';
-    }, 3000);
-    }else{
-        erreurMsg.style.display = 'none';
+    let erreurMsg = document.querySelectorAll('.alert');
+    for (const error of erreurMsg) {
+        if( error.childElementCount != 0){
+            setTimeout(() => {
+                error.style.display = 'none';
+        }, 3000);
+        }else{
+            error.style.display = 'none';
+        }
     }
+
+    //Affichage mdp pour confirmation de suppr..
+    const indicatorSwitch = document.querySelectorAll('.indicatorSwitch');
+
+    for (let targetedInput of indicatorSwitch){
+        targetedInput.addEventListener('click', function(){
+            if(targetedInput.previousSibling.getAttribute('type') == 'password'){
+                targetedInput.previousSibling.setAttribute('type', 'text');
+                const lock = targetedInput.childNodes;
+                lock[0].setAttribute('src', 'img/cadenas-deverrouille.png');
+            }else{
+                targetedInput.previousSibling.setAttribute('type', 'password');
+                const lock = targetedInput.childNodes;
+                lock[0].setAttribute('src', 'img/cadenas-verrouille.png');
+            };
+        });
+    }
+
+    if(buttonDelAccount != null && buttonDelSession != null){
 
     //Delete compte..
     buttonDelAccount.addEventListener('click', function(e){
@@ -530,10 +559,10 @@ window.addEventListener('DOMContentLoaded', function(){
         if(formDelAccount.getAttribute('class') == 'formAccount'){
             e.preventDefault();
             formDelAccount.classList.add('formConfAccount');
-        }else if(formDelAccount.getAttribute('class') == 'formAccount formConfAccount' && document.querySelector('.formAccount input:nth-of-type(2)').value == ""){
+        }else if(formDelAccount.getAttribute('class') == 'formAccount formConfAccount' && document.querySelector('.formAccount div input').value == ""){
             e.preventDefault();
             formDelAccount.classList.remove('formConfAccount');
-        }else if(formDelAccount.getAttribute('class') == 'formAccount formConfAccount' && document.querySelector('.formAccount input:nth-of-type(2)').value != ""){
+        }else if(formDelAccount.getAttribute('class') == 'formAccount formConfAccount' && document.querySelector('.formAccount div input').value != ""){
 
         }else{
             e.preventDefault();
@@ -547,15 +576,18 @@ window.addEventListener('DOMContentLoaded', function(){
         if(formDelSession.getAttribute('class') == 'formSession'){
             e.preventDefault();
             formDelSession.classList.add('formConfSession');
-        }else if(formDelSession.getAttribute('class') == 'formSession formConfSession' && document.querySelector('.formSession input:nth-of-type(2)').value == ""){
+        }else if(formDelSession.getAttribute('class') == 'formSession formConfSession' && document.querySelector('.formSession div input').value == ""){
             e.preventDefault();
             formDelSession.classList.remove('formConfSession');
-        }else if(formDelSession.getAttribute('class') == 'formSession formConfSession' && document.querySelector('.formSession input:nth-of-type(2)').value != ""){
+        }else if(formDelSession.getAttribute('class') == 'formSession formConfSession' && document.querySelector('.formSession div input').value != ""){
 
         }else{
             e.preventDefault();
         }
+        
 
     });
+
+    };
 
 });

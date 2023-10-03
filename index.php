@@ -63,68 +63,86 @@ require_once('processPhp/receptionBDD.php');
             <section id="sectionSpec">
                 <h2>Spectateurs</h2>
                 <div id="spec">
-                    <?php foreach($listSpec as $spec): ?>
-                        <?php if($spec['userName'] != $_SESSION['nameModerator']): ?>
-                            <form action="index.php" method="post">
-                                <input type="hidden" name="delFormSpec" value="<?php echo $spec['userName'] ?>">
-                                <button class="spec" type="submit"><?php echo '<p>'. $spec['userName'] .'</p>' ?><img src="img/fermer.png" alt="supprimer"></button>
-                                <!-- comfirmation de supp en js comme pour les btn de sauvegarde et d'import ajouter form pour ajout spec-->
-                            </form>
-                        <?php else: ?>
-                            <p class="host"><?php echo $spec['userName'] ?>(hôte)</p>
-                        <?php endif; ?>
-                    <?php endforeach; ?>
+                    <?php if($_SESSION['userActive'] == $_SESSION['nameModerator']): ?>
+                        <!-- Affichage spec pour modérateur-->
+                        <?php foreach($listSpec as $spec): ?>
+                            <?php if($spec['userName'] != $_SESSION['nameModerator']): ?>
+                                <form action="index.php" method="post">
+                                    <input type="hidden" name="delFormSpec" value="<?php echo $spec['userName'] ?>">
+                                    <button class="spec" type="submit"><?php echo $spec['userName'] ?><img src="img/fermer.png" alt="supprimer"></button>
+                                </form>
+                            <?php else: ?>
+                                <p class="host"><?php echo $spec['userName'] ?>(hôte)</p>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <!-- Affichage spec pour spec-->
+                        <?php foreach($listSpec as $spec): ?>
+                            <?php if($spec['userName'] != $_SESSION['nameModerator']): ?>
+                                <p class="spec"><?php echo $spec['userName'] ?></p>
+                            <?php else: ?>
+                                <p class="host"><?php echo $spec['userName'] ?>(hôte)</p>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </div>
-                <form id="addFormSpec" action="index.php" method="post">
-                    <input type="text" name="addFromSpec" required>
-                    <button type="submit">Ajouter</button>
-                </form>
-                <div class='alert'>
-                    <?php if(isset($_SESSION['errorDoublon'])){ echo '<p>'. $_SESSION['errorDoublon'] .'</p>';
-                    unset($_SESSION['errorDoublon']);} ?>
-                    <?php if(isset($_SESSION['uncaughtUser'])){ echo '<p>'. $_SESSION['uncaughtUser'] .'</p>';
-                    unset($_SESSION['uncaughtUser']);} ?>
-                </div>
-                <div id='setting'>
-                    <form class="formSession" action="index.php" method="post">
-                        <input type="hidden" name="deleteSession" value="delete">
-                        <input type="password" name="ConfDeleteSession" placeholder="Mot de passe">
-                        <button id="boutonSession" type="submit">Supprimer la session</button>
+                <?php if($_SESSION['nameModerator'] == $_SESSION['userActive']): ?>
+                    <form id="addFormSpec" action="index.php" method="post">
+                        <input type="text" name="addFromSpec" required>
+                        <button type="submit">Ajouter</button>
                     </form>
-                    <form class="formAccount" action="index.php" method="post">
-                        <input type="hidden" name="deleteAccount" value="delete">
-                        <input type="password" name="ConfDeleteAccount" placeholder="Mot de passe">
-                        <button id="boutonCompte" type="submit">Supprimer le compte</button>
-                    </form>
-                </div>
+                    <div class='alert'>
+                        <?php if(isset($_SESSION['errorDoublon'])){ echo '<p>'. $_SESSION['errorDoublon'] .'</p>';
+                        unset($_SESSION['errorDoublon']);} ?>
+                        <?php if(isset($_SESSION['uncaughtUser'])){ echo '<p>'. $_SESSION['uncaughtUser'] .'</p>';
+                        unset($_SESSION['uncaughtUser']);} ?>
+                    </div>
+                    <div id='setting'>
+                        <form class="formSession" action="index.php" method="post">
+                            <input type="hidden" name="deleteSession" value="delete">
+                            <div><input class="switchPassword" type="password" name="ConfDeleteSession" placeholder="Mot de passe"><p class="indicatorSwitch"><img src="img/cadenas-verrouille.png"></p></div>
+                            <button id="boutonSession" type="submit">Supprimer la session</button>
+                        </form>
+                        <form class="formAccount" action="index.php" method="post">
+                            <input type="hidden" name="deleteAccount" value="delete">
+                            <div><input class="switchPassword" type="password" name="ConfDeleteAccount" placeholder="Mot de passe"><p class="indicatorSwitch"><img src="img/cadenas-verrouille.png"></p></div>
+                            <button id="boutonCompte" type="submit">Supprimer le compte</button>
+                        </form>
+                        <div class='alert'>
+                            <?php if(isset($_POST['errorMdp'])){ echo '<p>'. $_POST['errorMdp'] .'</p>';} ?>
+                            <?php if(isset($_POST['errorDelSession'])){ echo '<p>'. $_POST['errorDelSession'] .'</p>';} ?>
+                        </div>
+                    </div>
+                <?php endif; ?>
             </section>
         <?php else:
             header("Refresh:0; url=login.php"); ?>
         <?php endif; ?>
     </main>
     <?php if(isset($_SESSION['userActive']) && isset($_SESSION['sessionActive'])): ?>
-    <footer>
-        <p id="info"><b id="nameUserActive"><?php echo $_SESSION['userActive'] ?></b> est connecté sur la session <b id="nameSessionActive"><?php echo $_SESSION['sessionActive'] ?></b></p>
-        
-        <?php if($_SESSION['nameModerator'] == $_SESSION['userActive']): ?>
-        <form id="formToSave" method="post" action="envoieBDD.php">
-            <button id="save" type="submit"><img id="saveImg" src="img/sauvegarder.png" alt="sauvegarde"><p>Enregistrer</p></button>
-        </form>
-        <?php endif; ?>
+        <footer>
+            <p id="info"><b id="nameUserActive"><?php echo $_SESSION['userActive'] ?></b> est connecté sur la session <b id="nameSessionActive"><?php echo $_SESSION['sessionActive'] ?></b></p>
 
-        <button type="button" id="download"><img id="downloadImg" src="img/telecharger.png" alt="importer"><p>Importer</p></button>
+            <?php if($_SESSION['nameModerator'] == $_SESSION['userActive']): ?>
+                <form id="formToSave" method="post" action="envoieBDD.php">
+                    <button id="save" type="submit"><img id="saveImg" src="img/sauvegarder.png" alt="sauvegarde"><p>Enregistrer</p></button>
+                </form>
 
-        <form method="post" action="login.php">
-            <button id='disconnect' type="submit" name="deco" value="reset">Déconnecter</button>
-        </form>    
-    </footer>
+                <button type="button" id="download"><img id="downloadImg" src="img/telecharger.png" alt="importer"><p>Importer</p></button>
+            <?php endif; ?>
+
+            <form method="post" action="login.php">
+                <button id='disconnect' type="submit" name="deco" value="reset">Déconnecter</button>
+            </form>    
+        </footer>
     <?php endif; ?>
     <?php if(isset($_SESSION['userActive']) && isset($_SESSION['sessionActive'])): ?>
 
-    <?php echo "<script> let elements = '".$jsArray."'; </script>"; ?>
-    <?php echo "<script> let peoples = '".$jsPeoples."'; </script>"; ?>
-    
-    <script type="text/javascript" src="main.js"></script>
+        <?php echo "<script> let elements = '".$jsArray."'; </script>"; ?>
+        <?php echo "<script> let peoples = '".$jsPeoples."'; </script>"; ?>
+        <?php if($_SESSION['userActive'] == $_SESSION['nameModerator']){ echo "<script> let moderator = 'true'; </script>";}; ?>
+        
+        <script type="text/javascript" src="main.js"></script>
     <?php endif; ?>
 </body>
 </html>

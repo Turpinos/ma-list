@@ -1,18 +1,37 @@
 <?php
 require_once('initBDD.php');
 
+$search = false;
 //Validation de connection pour utilisateur deja existant..
 if(isset($_POST['inputUser']) && isset($_POST['inputPassword'])){
    if(!isset($_SESSION['userActive'])){
        foreach($users as $user){
            if($user['userName'] == $_POST['inputUser'] && password_verify($_POST['inputPassword'], $user['userKey'])){
-                  $_SESSION['userActive'] = $user['userName'];
+              if(!isset($_POST['AccountActiveForSessionActive'])){
+                     $_SESSION['userActive'] = $user['userName'];
+              }else{
+                     $search = true;
+              }
            }
        }   
    }
+
+   if($search){
+       $session = $mySqlConnection->prepare('SELECT * FROM `attributions` WHERE userName = :userName');
+       $session->execute([
+              'userName' => $_POST['inputUser']
+       ]);
+       $listSession = $session->fetchAll(PDO::FETCH_ASSOC);
+
+       $modo = $mySqlConnection->prepare('SELECT * FROM `sessionsusers` WHERE UserSession = :UserSession');
+       $modo-> execute([
+              'UserSession' => $_POST['inputUser']
+       ]);
+       $listModo = $modo->fetchAll(PDO::FETCH_ASSOC);
+   }
     
    //Validation du choix ou creation de session..
-   if(!isset($_SESSION['sessionActive'])){
+   if(!isset($_SESSION['sessionActive']) && isset($_POST['AccountActiveForSessionActive'])){
        if(!empty($_POST['AccountActiveForSessionActive']) && !empty($_POST['AccountActiveForNewSession'])){
               $_SESSION['errorDoubleInput'] = 'Vous ne pouvez pas vous connectez et créer une session en même temps.';
        }else if(!empty($_POST['AccountActiveForSessionActive'])){
@@ -92,14 +111,6 @@ if(isset($_POST['inputUser']) && !isset($_SESSION['userActive'])){
               $_SESSION['errorUser'] = 'Il y a une erreur avec le nom d\'utilisateur ou le MDP.';
        }
        
-}
-
-if(isset($_POST['AccountActiveForSessionActive']) && !isset($_SESSION['sessionActive'])){
-       if(!isset($_SESSION['errorDoubleInput'])){
-              if($_SERVER['PHP_SELF'] == '/ma-liste/index.php'){
-                     $_SESSION['errorSession'] = 'Il y a une erreur avec le nom de session.';
-              }
-       }
 }
 
 
@@ -183,7 +194,194 @@ if(isset($_POST['addFromSpec'])){
        }
 }
 
+//Suppression de la session_______________________________________________________
+if(isset($_POST['deleteSession']) && isset($_POST['ConfDeleteSession'])){
 
+       $mdp = validInput($_POST['ConfDeleteSession']);
+
+       $validDelSession = false;
+
+       foreach($users as $user){
+
+              if($user['userName'] == $_SESSION['userActive'] && password_verify($mdp, $user['userKey'])){
+                     $validDelSession = true;
+              }
+       }
+
+       if($validDelSession){
+
+            $selectItems = $mySqlConnection->prepare('SELECT `title` FROM `items` WHERE sessionKey = :sessionKey');
+            $selectItems->execute([
+              'sessionKey' => $_SESSION['sessionActive']
+            ]);
+            $item = $selectItems->fetchAll();
+            
+            $selectParts = $mySqlConnection->prepare('SELECT `nameParticipant` FROM `participants` WHERE sessionKey = :sessionKey');
+            $selectParts->execute([
+              'sessionKey' => $_SESSION['sessionActive']
+            ]);
+            $part = $selectParts->fetchAll();
+
+            $selectAttri = $mySqlConnection->prepare('SELECT `userName` FROM `attributions` WHERE sessionKey = :sessionKey');
+            $selectAttri->execute([
+              'sessionKey' => $_SESSION['sessionActive']
+            ]);
+            $attri = $selectAttri->fetchAll();
+
+            try {
+              // Démarrez la transaction
+              $mySqlConnection->beginTransaction();
+      
+              if(count($item) != 0){
+                     $delItems = $mySqlConnection->prepare('DELETE FROM items WHERE sessionKey = :sessionKey');
+                     $delItems->execute([
+                            'sessionKey' => $_SESSION['sessionActive']
+                     ]);
+              }
+
+              if(count($part) != 0){
+                     $delPart = $mySqlConnection->prepare('DELETE FROM participants WHERE sessionKey = :sessionKey');
+                     $delPart->execute([
+                            'sessionKey' => $_SESSION['sessionActive']
+                     ]);
+              }
+
+              if(count($attri) != 0){
+                     $delAttri = $mySqlConnection->prepare('DELETE FROM attributions WHERE sessionKey = :sessionKey');
+                     $delAttri->execute([
+                            'sessionKey' => $_SESSION['sessionActive']
+                     ]);
+              }
+
+              $delSession = $mySqlConnection->prepare('DELETE FROM sessionsusers WHERE sessionKey = :sessionKey');
+              $delSession->execute([
+                     'sessionKey' => $_SESSION['sessionActive']
+              ]);
+      
+              // Si tout s'est bien passé, validez la transaction
+              $mySqlConnection->commit();
+      
+              unset($_SESSION['sessionActive']);
+              unset($_SESSION['userActive']);
+              unset($_SESSION['nameModerator']);
+              header('Refresh:0, url=login.php');
+
+          } catch (PDOException $e) {
+              // En cas d'erreur, annulez la transaction
+              $mySqlConnection->rollBack();
+      
+              // Gérez l'erreur ou affichez un message d'erreur
+              $_POST['errorDelSession'] =  "Erreur : " . $e->getMessage();
+          }
+       }else{
+              $_POST['errorMdp'] = 'Le mot de passe est erroné';
+       }
+}
+
+//Suppression du compte_______________________________________________________________
+if(isset($_POST['deleteAccount']) && isset($_POST['ConfDeleteAccount'])){
+
+       $mdp = validInput($_POST['ConfDeleteAccount']);
+
+       $validDelAccount = false;
+
+       foreach($users as $user){
+              if($user['userName'] == $_SESSION['userActive'] && password_verify($mdp, $user['userKey'])){
+                     $validDelAccount = true;
+              };
+       };
+
+       if($validDelAccount){
+
+              $selectSession = $mySqlConnection->prepare('SELECT `sessionKey` FROM `sessionsusers` WHERE UserSession = :UserSession');
+              $selectSession->execute([
+                     'UserSession' => $_SESSION['userActive']
+              ]);
+              $session = $selectSession->fetchAll(PDO::FETCH_ASSOC);
+
+              $i = 0;
+              foreach($session as $own){
+
+                     $selectItems = $mySqlConnection->prepare('SELECT `title` FROM `items` WHERE sessionKey = :sessionKey');
+                     $selectItems->execute([
+                       'sessionKey' => $own['sessionKey']
+                     ]);
+                     $item[$i] = $selectItems->fetchAll();
+
+                     $selectParts = $mySqlConnection->prepare('SELECT `nameParticipant` FROM `participants` WHERE sessionKey = :sessionKey');
+                     $selectParts->execute([
+                       'sessionKey' => $own['sessionKey']
+                     ]);
+                     $part[$i] = $selectParts->fetchAll();
+
+                     $selectAttri = $mySqlConnection->prepare('SELECT `userName` FROM `attributions` WHERE sessionKey = :sessionKey');
+                     $selectAttri->execute([
+                       'sessionKey' => $own['sessionKey']
+                     ]);
+                     $attri[$i] = $selectAttri->fetchAll();
+
+              }
+
+              try {
+                     // Démarrez la transaction
+                     $mySqlConnection->beginTransaction();
+             
+                     $u = 0;
+                     foreach($session as $own){
+
+                            if(count($item[$u]) != 0){
+                                   $delItems = $mySqlConnection->prepare('DELETE FROM items WHERE sessionKey = :sessionKey');
+                                   $delItems->execute([
+                                          'sessionKey' => $own['sessionKey']
+                                   ]);
+                            }
+              
+                            if(count($part[$u]) != 0){
+                                   $delPart = $mySqlConnection->prepare('DELETE FROM participants WHERE sessionKey = :sessionKey');
+                                   $delPart->execute([
+                                          'sessionKey' => $own['sessionKey']
+                                   ]);
+                            }
+              
+                            if(count($attri[$u]) != 0){
+                                   $delAttri = $mySqlConnection->prepare('DELETE FROM attributions WHERE sessionKey = :sessionKey');
+                                   $delAttri->execute([
+                                          'sessionKey' => $own['sessionKey']
+                                   ]);
+                            }
+                     }
+
+                     $delSession = $mySqlConnection->prepare('DELETE FROM sessionsusers WHERE UserSession = :UserSession');
+                     $delSession->execute([
+                            'UserSession' => $_SESSION['userActive']
+                     ]);
+
+                     $delUser = $mySqlConnection->prepare('DELETE FROM users WHERE userName = :userName');
+                     $delUser->execute([
+                            'userName' => $_SESSION['userActive']
+                     ]);
+                     
+             
+                     // Si tout s'est bien passé, validez la transaction
+                     $mySqlConnection->commit();
+             
+                     unset($_SESSION['sessionActive']);
+                     unset($_SESSION['userActive']);
+                     unset($_SESSION['nameModerator']);
+                     header('Refresh:0, url=login.php');
+
+              } catch (PDOException $e) {
+                     // En cas d'erreur, annulez la transaction
+                     $mySqlConnection->rollBack();
+             
+                     // Gérez l'erreur ou affichez un message d'erreur
+                     $_POST['errorDelSession'] = "Erreur : " . $e->getMessage();
+              }
+
+       }else{
+              $_POST['errorMdp'] = 'Le mot de passe est erroné';
+       }
+}
 
 //____________________________________Envoi mail au support______________________________________//
 

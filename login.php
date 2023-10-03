@@ -34,7 +34,7 @@
                 <div><p>Se connecter à une session:</p></div>
                 <div>
                     <label for="AccountActiveForSessionActive">Session:</label>
-                    <input type="text" name="AccountActiveForSessionActive">
+                    <!--<input type="text" name="AccountActiveForSessionActive">-->
                 </div>
                 <div><p>Ou créer une session:</p></div>
                 <div>
@@ -117,8 +117,22 @@
             </div>
             <div><p>Se connecter à une session:</p></div>
             <div>
-                <label for="AccountActiveForSessionActive">Session:</label>
-                <input type="text" name="AccountActiveForSessionActive">
+                <p for="AccountActiveForSessionActive"><b>Session:</b></p>
+                <div class="radio">
+                    <?php if(isset($listSession)): ?>
+                        <?php if(count($listSession) != 0): ?>
+
+                        <?php foreach($listSession as $oneSession): ?>
+                            <input type="radio" name="AccountActiveForSessionActive">
+                        <?php endforeach;?>
+
+                        <?php else: ?>
+                            <p>Aucune session trouvée</p>
+                        <?php endif; ?>
+
+                    <?php endif; ?>
+                </div>
+                <!--<input type="text" name="AccountActiveForSessionActive">-->
             </div>
             <div><p>Ou créer une session:</p></div>
             <div>
@@ -177,7 +191,7 @@
             </div>
         </form>
         <div class="formOption">
-            <form class="formLogin" method="post" action="index.php">
+            <form class="formLogin" method="post" action="login.php">
                 <h3>Inscription</h3>
                 <div>
                     <label for="inputCrtUser">Pseudo:</label>
