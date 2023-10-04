@@ -86,6 +86,7 @@ h1{
 
 #sectionSpec #addFormSpec button{
     font-size: 1rem;
+    border-radius: 0.2rem;
     padding: 0.5rem;
     margin-left: 0.5rem;
     box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.467);
@@ -123,7 +124,7 @@ h1{
     flex-wrap: nowrap;
 }
 
-.formSession{
+.formSession, .formAccount{
     border-top: 2px rgba(249, 40, 40, 0) solid;
     margin-block: 1rem;
     display: flex;
@@ -134,24 +135,7 @@ h1{
     transition: all 300ms;
 }
 
-.formConfSession{
-    border-top: 2px rgb(249, 40, 40) solid;
-    height: 5rem;
-    transition: all 300ms;
-}
-
-.formAccount{
-    border-top: 2px rgba(249, 40, 40, 0) solid;
-    margin-block: 1rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    overflow: hidden;
-    height: 1.5rem;
-    transition: all 300ms;
-}
-
-.formConfAccount{
+.formConfSession, .formConfAccount{
     border-top: 2px rgb(249, 40, 40) solid;
     height: 5rem;
     transition: all 300ms;
@@ -207,12 +191,7 @@ h2{
     width: 33%;
 }
 
-#items tbody tr td:nth-child(3){
-    width: 33%;
-    text-align: center;
-}
-
-#items tbody tr td:nth-child(4){
+#items tbody tr td:nth-child(3), #items tbody tr td:nth-child(4){
     width: 33%;
     text-align: center;
 }
@@ -289,6 +268,7 @@ h2{
 
 #list button{
     font-size: 1rem;
+    border-radius: 0.2rem;
     margin: auto;
     padding: 0.5rem;
     box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.467);
@@ -327,6 +307,7 @@ h2{
 
 #participation button{
     width: auto;
+    border-radius: 0.2rem;
     font-size: 1rem;
     padding: 0.5rem;
     box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.467);
@@ -356,22 +337,14 @@ h2{
     background-color: rgb(240, 253, 242);
 }
 
-#participants tr td:nth-child(1){
-    width: 25%;
-}
-
-#participants tr td:nth-child(2){
+#participants tr td:nth-child(1), #participants tr td:nth-child(2), #participants tr td:nth-child(3), #participants tr td:nth-child(4){
     width: 25%;
 }
 
 #participants tr td:nth-child(3){
-    width: 25%;
     color: grey;
 }
 
-#participants tr td:nth-child(4){
-    width: 25%;
-}
 
 /*Fin des sections*/
 
@@ -413,16 +386,7 @@ footer #disconnect{
     transition: all 150ms;
 }
 
-footer #disconnect:hover{
-    background-color: rgb(255, 78, 78);
-    color: white;
-}
-
-footer #disconnect:active{
-    transform: scale(0.95);
-}
-
-footer #save{
+footer #save, footer #download{
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -439,109 +403,57 @@ footer #save{
     border: none;
     border-radius: 2rem;
     transition: all 150ms;
+}
+
+#saveImg, #downloadImg{
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-block: auto;
+    margin-inline: 0.5rem;
+}
+
+footer #disconnect:hover{
+    background-color: rgb(255, 78, 78);
+    color: white;
 }
 
 footer #save:hover{
     width: 8.5rem;
 }
 
-footer #save:active{
-    transform: scale(0.95);
-}
-
-#saveImg{
-    width: 1.5rem;
-    height: 1.5rem;
-    margin-block: auto;
-    margin-inline: 0.5rem;
-}
-
-footer #download{
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    height: 2.5rem;
-    width: 2.5rem;
-    overflow: hidden;
-    font-size: 1rem;
-    font-weight: 600;
-    padding: 0;
-    margin-block: 0.5rem;
-    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.467);
-    background-color: white;
-    color: #5588D4;
-    border: none;
-    border-radius: 2rem;
-    transition: all 150ms;
-}
-
 footer #download:hover{
     width: 7.5rem;
 }
 
-footer #download:active{
+footer #download:active, footer #save:active, footer #disconnect:active{
     transform: scale(0.95);
 }
 
-#downloadImg{
-    width: 1.5rem;
-    height: 1.5rem;
-    margin-block: auto;
-    margin-inline: 0.5rem;
-}
-
-
 /*___________________________________Style page de réception de données__________________________________________ */
-#noValidInput{
+#noValidInput, #noConnection, #validInput{
     margin-block: 2rem;
     margin-inline: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 90%;
+}
+
+#noValidInput, #noConnection{
     border: 1px rgba(255, 75, 75, 0.5) solid;
     border-radius: 20px;
     background-color: rgb(255, 197, 197);
     color: rgb(138, 0, 0);
 }
 
-#noValidInput p{
-    text-align: center;
-    width: 90%;
-}
-
 #validInput{
-    margin-block: 2rem;
-    margin-inline: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 90%;
     border: 1px rgba(90, 255, 75, 0.5) solid;
     border-radius: 20px;
     background-color: rgb(199, 255, 197);
     color: rgb(7, 138, 0);
 }
 
-#validInput p{
-    text-align: center;
-    width: 90%;
-}
-
-#noConnection{
-    margin-block: 2rem;
-    margin-inline: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 90%;
-    border: 1px rgba(255, 75, 75, 0.5) solid;
-    border-radius: 20px;
-    background-color: rgb(255, 197, 197);
-    color: rgb(138, 0, 0);
-}
-
-#noConnection p{
+#noValidInput p, #validInput p, #noConnection p{
     text-align: center;
     width: 90%;
 }
@@ -550,7 +462,7 @@ footer #download:active{
 .mainLogin{
     display: flex;
     flex-direction: column;
-    height: 90vh;
+    align-items: center;
 }
 
 .mainLogin .formOption{
@@ -558,11 +470,10 @@ footer #download:active{
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 40%;
 }
 
 .formLogin{
-    margin: auto auto;
+    margin: 1rem auto;
     padding: 1rem;
     display: flex;
     flex-direction: column;
@@ -590,6 +501,7 @@ footer #download:active{
 
 .formLogin button{
     margin-block: 0.5rem;
+    border-radius: 0.2rem;
     font-size: 1rem;
     padding: 0.5rem;
     box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.467);
@@ -611,6 +523,7 @@ footer #download:active{
     width: 100%;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     margin-block: 0.5rem;
 }
 
@@ -622,10 +535,26 @@ footer #download:active{
     width: 9.5rem;
 }
 
-.formLogin div label{
+.formLogin div label, .formLogin div .label{
+    margin-block: 0px;
     padding-right: 1rem;
     font-weight: 500;
     font-size: 1rem;
+}
+
+.formLogin div .label{
+    align-self: flex-start;
+}
+
+.formLogin div .radio{
+    margin: 0px;
+    display: flex;
+    flex-direction: column;
+    color: #5588D4;
+}
+
+.radio p, .radio input{
+    margin: 0px;
 }
 
 .formLogin div textarea{
@@ -634,6 +563,7 @@ footer #download:active{
 }
 
 .alert{
+    text-align: center;
     display: flex;
     font-size: 1rem;
     flex-direction: column;
@@ -643,15 +573,7 @@ footer #download:active{
 
 @media screen and (min-width: 720px) {
 
-#noValidInput{
-    width: 33%;
-}
-
-#validInput{
-    width: 33%;
-}
-
-#noConnection{
+#noValidInput, #validInput, #noConnection{
     width: 33%;
 }
     
@@ -669,16 +591,10 @@ footer #download:active{
     width: 25%;
 }
     
-#items tbody tr td:nth-child(3){
+#items tbody tr td:nth-child(3), #items tbody tr td:nth-child(4){
     width: 25%;
     text-align: center;
-}
-    
-#items tbody tr td:nth-child(4){
-    width: 25%;
-    text-align: center;
-}
-    
+}    
            
 #participation form label{
     display: inline;
@@ -687,10 +603,16 @@ footer #download:active{
 
 }
 
+
 @media screen and (min-width: 1200px) {
 
 .mainLogin{
     flex-direction: row;
+    padding-inline: 10%;
+}
+
+.mainLogin .formOption{
+    width: 50%;
 }
 
 #mainIndex{
@@ -699,12 +621,7 @@ footer #download:active{
     align-items: unset;
 }
 
-section:nth-of-type(1){
-    width: 35%;
-    height: 100%;
-}
-
-section:nth-of-type(2){
+section:nth-of-type(1), section:nth-of-type(2){
     width: 35%;
     height: 100%;
 }
@@ -725,18 +642,9 @@ section:nth-of-type(3){
     display: none
 }
     
-#items tbody tr td:nth-child(2){
+#items tbody tr td:nth-child(2), #items tbody tr td:nth-child(3), #items tbody tr td:nth-child(4){
     width: 33%;
-}
-    
-#items tbody tr td:nth-child(3){
-    width: 33%;
-}
-    
-#items tbody tr td:nth-child(4){
-    width: 33%;
-}
-    
+}   
            
 #participation form label{
     display: none;
@@ -744,6 +652,7 @@ section:nth-of-type(3){
 }
 
 }
+
 
 @media screen and (min-width: 1515px) {
     
@@ -756,19 +665,10 @@ section:nth-of-type(3){
     width: 25%;
 }
 
-#items tbody tr td:nth-child(2){
+#items tbody tr td:nth-child(2), #items tbody tr td:nth-child(3), #items tbody tr td:nth-child(4){
     width: 25%;
 }
-
-#items tbody tr td:nth-child(3){
-    width: 25%;
-}
-
-#items tbody tr td:nth-child(4){
-    width: 25%;
-}
-
-       
+      
 #participation form label{
     display: inline;
     margin-right: 0.5rem;

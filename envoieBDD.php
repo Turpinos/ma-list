@@ -2,7 +2,6 @@
 session_start();
 require_once('processPhp/initBDD.php');
 require_once('processPhp/validEnvoieBDD.php');
-
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -20,8 +19,9 @@ require_once('processPhp/validEnvoieBDD.php');
     <main>
         <?php if($connected): ?>
             <?php if($validInput): ?>
-                <script>localStorage.removeItem(localStorage.getItem('infoConnection'));
-                        localStorage.removeItem(`${localStorage.getItem('infoConnection')}_part`);
+                <script>
+                    localStorage.removeItem(localStorage.getItem('infoConnection'));
+                    localStorage.removeItem(`${localStorage.getItem('infoConnection')}_part`);
                 </script>
                 <div id="validInput">
                     <h1>C'est tout bon!</h1>
@@ -45,6 +45,5 @@ require_once('processPhp/validEnvoieBDD.php');
 
         </div>
     </main>
-    
 </body>
 </html>

@@ -3,10 +3,7 @@
 //Declaration variables..
 let buttonAdd = document.getElementById('buttonAdd');
 let buttonParticipant = document.getElementById('buttonParticipant');
-let element;
 let localItems;
-let savedItems;
-let totalItems;
 let localParticipants;
 let addTotal;
 let buttonDelSession = document.querySelector('#boutonSession');

@@ -21,45 +21,71 @@
     <?php if(isset($_SESSION['userActive']) && isset($_SESSION['sessionActive'])): ?>
         <?php if(isset($_POST['deco'])): ?>
             <main class="mainLogin">
-                <form class="formLogin" method="post" action="index.php">
+                <form class="formLogin" method="post" action="<?php if(isset($listSession)){ echo "index.php"; }else{ echo "login.php"; } ?>">
                     <h3>Connexion</h3>
-                <div>
-                    <label for="inputUser">Pseudo:</label>
-                    <input type="text" name="inputUser">
-                </div>
-                <div>
-                    <label for="inputPassword">Mot de passe:</label>
-                    <input class="switchPassword" type="password" name="inputPassword"><p class="indicatorSwitch"><img src="img/cadenas-verrouille.png"></p>
-                </div>
-                <div><p>Se connecter à une session:</p></div>
-                <div>
-                    <label for="AccountActiveForSessionActive">Session:</label>
-                    <!--<input type="text" name="AccountActiveForSessionActive">-->
-                </div>
-                <div><p>Ou créer une session:</p></div>
-                <div>
-                    <label for="AccountActiveForNewSession">Session:</label>
-                    <input type="text" name="AccountActiveForNewSession">
-                </div>
-                <button type="submit">Connexion</button>
-                <div class='alert'>
+                    <div>
+                        <label for="inputUser">Pseudo:</label>
+                        <input type="text" name="inputUser" <?php if(isset($listSession)){ echo 'value="'. $_POST['inputUser'].'"';}; ?> <?php if(isset($_SESSION['placeholderPseudo'])){ echo 'value="'. $_SESSION['placeholderPseudo'] .'"';} ?>>
+                    </div>
+                    <div>
+                        <label for="inputPassword">Mot de passe:</label>
+                        <div>
+                        <input class="switchPassword" type="password" name="inputPassword" <?php if(isset($listSession)){ echo 'value="'. $_POST['inputPassword'].'"';}; ?> <?php if(isset($_SESSION['placeHolderpass'])){ echo 'value="'. $_SESSION['placeHolderpass'] .'"';} ?>><p class="indicatorSwitch"><img src="img/cadenas-verrouille.png"></p>
+                        </div>
+                    </div>
+                    <div><p>Se connecter à une session:</p></div>
+                    <div>
+                        <p class="label">Session:</p>
+                        <div class="radio">
+                            <?php if(isset($listSession)): ?>
+                                <?php if(count($listSession) != 0): ?>
+                                    <?php foreach($listSession as $oneSession): ?>
+                                        <p><input type="radio" name="AccountActiveForSessionActive" value="<?php echo $oneSession['sessionKey'] ?>">
+                                        <label for="AccountActiveForSessionActive"><?php echo $oneSession['sessionKey'] ?>
+                                    <?php
+                                    foreach($listModo as $modo){
+                                        if($modo['sessionKey'] == $oneSession['sessionKey']){
+                                            echo " (hôte)" ;
+                                        };
+                                    };
+                                    ?>
+                                    </label></p>
+                                    <?php endforeach;?>
+                                
+                                <?php else: ?>
+                                    <p class="msg">Aucune session trouvée.</p>
+                                    <p class="msg">Rechargez si vous venez d'être ajouté(e).</p>
+                                <?php endif; ?>
+                            <?php else: ?>
+                                <p class="msg">Connectez-vous pour afficher.</p>
+                            
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    <div><p>Ou créer une session:</p></div>
+                    <div>
+                        <label for="AccountActiveForNewSession">Session:</label>
+                        <input type="text" name="AccountActiveForNewSession">
+                    </div>
+                    <button type="submit">Connexion</button>
+                    <div class='alert'>
 
-                    <?php
-                        if(isset($_SESSION['userActive'])){
-                            unset($_SESSION['userActive']);
-                        }
+                        <?php
+                            if(isset($_SESSION['userActive'])){
+                                unset($_SESSION['userActive']);
+                            }
 
-                        if(isset($_SESSION['sessionActive'])){
-                            unset($_SESSION['sessionActive']);
-                        }
+                            if(isset($_SESSION['sessionActive'])){
+                                unset($_SESSION['sessionActive']);
+                            }
 
-                        if(isset($_SESSION['nameModerator'])){
-                            unset($_SESSION['nameModerator']);
-                        };
-                    ?>
+                            if(isset($_SESSION['nameModerator'])){
+                                unset($_SESSION['nameModerator']);
+                            };
+                        ?>
 
-                
-                </div>
+                        
+                    </div>
                 </form>
                 <div class="formOption">
                     <form class="formLogin" method="post" action="login.php">
@@ -77,7 +103,7 @@
                     <form class="formLogin" action="login.php" method="post">
                         <h3>Message au support</h3>
                         <div>
-                            <label for="emailForSupport">Votre Email:</label>
+                            <label for="emailForSupport">Votre email:</label>
                             <input type="text" name="emailForSupport" required>
                         </div>
                         <div>
@@ -103,36 +129,46 @@
             <?php endif; ?>
     <?php else: ?>
     <main class="mainLogin">
-        <form class="formLogin" method="post" action="index.php">
+        <form class="formLogin" method="post" action="<?php if(isset($listSession)){ echo "index.php"; }else{ echo "login.php"; } ?>">
             <h3>Connexion</h3>
             <div>
                 <label for="inputUser">Pseudo:</label>
-                <input type="text" name="inputUser" <?php if(isset($_SESSION['placeholderPseudo'])){ echo 'value="'. $_SESSION['placeholderPseudo'] .'"';} ?>>
+                <input type="text" name="inputUser" <?php if(isset($listSession)){ echo 'value="'. $_POST['inputUser'].'"';}; ?> <?php if(isset($_SESSION['placeholderPseudo'])){ echo 'value="'. $_SESSION['placeholderPseudo'] .'"';} ?>>
             </div>
             <div>
                 <label for="inputPassword">Mot de passe:</label>
                 <div>
-                <input class="switchPassword" type="password" name="inputPassword" <?php if(isset($_SESSION['placeHolderpass'])){ echo 'value="'. $_SESSION['placeHolderpass'] .'"';} ?>><p class="indicatorSwitch"><img src="img/cadenas-verrouille.png"></p>
+                <input class="switchPassword" type="password" name="inputPassword" <?php if(isset($listSession)){ echo 'value="'. $_POST['inputPassword'].'"';}; ?> <?php if(isset($_SESSION['placeHolderpass'])){ echo 'value="'. $_SESSION['placeHolderpass'] .'"';} ?>><p class="indicatorSwitch"><img src="img/cadenas-verrouille.png"></p>
                 </div>
             </div>
             <div><p>Se connecter à une session:</p></div>
             <div>
-                <p for="AccountActiveForSessionActive"><b>Session:</b></p>
+                <p class="label">Session:</p>
                 <div class="radio">
                     <?php if(isset($listSession)): ?>
                         <?php if(count($listSession) != 0): ?>
-
-                        <?php foreach($listSession as $oneSession): ?>
-                            <input type="radio" name="AccountActiveForSessionActive">
-                        <?php endforeach;?>
+                            <?php foreach($listSession as $oneSession): ?>
+                                <p><input type="radio" name="AccountActiveForSessionActive" value="<?php echo $oneSession['sessionKey'] ?>">
+                                <label for="AccountActiveForSessionActive"><?php echo $oneSession['sessionKey'] ?>
+                            <?php
+                            foreach($listModo as $modo){
+                                if($modo['sessionKey'] == $oneSession['sessionKey']){
+                                    echo " (hôte)" ;
+                                };
+                            };
+                            ?>
+                            </label></p>
+                            <?php endforeach;?>
 
                         <?php else: ?>
-                            <p>Aucune session trouvée</p>
+                            <p class="msg">Aucune session trouvée.</p>
+                            <p class="msg">Rechargez si vous venez d'être ajouté(e).</p>
                         <?php endif; ?>
+                    <?php else: ?>
+                        <p class="msg">Connectez-vous pour afficher.</p>
 
                     <?php endif; ?>
                 </div>
-                <!--<input type="text" name="AccountActiveForSessionActive">-->
             </div>
             <div><p>Ou créer une session:</p></div>
             <div>
@@ -185,6 +221,7 @@
                 
                 if(isset($_SESSION['errorAccess'])){
                     echo '<p>' . $_SESSION['errorAccess'] . '</p>';
+                    unset($_SESSION['errorAccess']);
                 };
 
                 ?>
@@ -228,7 +265,7 @@
             <form class="formLogin" action="login.php" method="post">
                 <h3>Message au support</h3>
                 <div>
-                    <label for="emailForSupport">Votre Email:</label>
+                    <label for="emailForSupport">Votre email:</label>
                     <input type="text" name="emailForSupport" required>
                 </div>
                 <div>

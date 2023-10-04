@@ -7,7 +7,7 @@ if(isset($_POST['inputUser']) && isset($_POST['inputPassword'])){
    if(!isset($_SESSION['userActive'])){
        foreach($users as $user){
            if($user['userName'] == $_POST['inputUser'] && password_verify($_POST['inputPassword'], $user['userKey'])){
-              if(!isset($_POST['AccountActiveForSessionActive'])){
+              if(isset($_POST['AccountActiveForSessionActive']) || !empty($_POST['AccountActiveForNewSession'])){
                      $_SESSION['userActive'] = $user['userName'];
               }else{
                      $search = true;
@@ -16,14 +16,15 @@ if(isset($_POST['inputUser']) && isset($_POST['inputPassword'])){
        }   
    }
 
+   //Recherche apres connexion si le compte possède des attributions..
    if($search){
-       $session = $mySqlConnection->prepare('SELECT * FROM `attributions` WHERE userName = :userName');
+       $session = $mySqlConnection->prepare('SELECT `userName`, `sessionKey` FROM `attributions` WHERE userName = :userName');
        $session->execute([
               'userName' => $_POST['inputUser']
        ]);
        $listSession = $session->fetchAll(PDO::FETCH_ASSOC);
 
-       $modo = $mySqlConnection->prepare('SELECT * FROM `sessionsusers` WHERE UserSession = :UserSession');
+       $modo = $mySqlConnection->prepare('SELECT `sessionKey`, `UserSession` FROM `sessionsusers` WHERE UserSession = :UserSession');
        $modo-> execute([
               'UserSession' => $_POST['inputUser']
        ]);
@@ -31,7 +32,7 @@ if(isset($_POST['inputUser']) && isset($_POST['inputPassword'])){
    }
     
    //Validation du choix ou creation de session..
-   if(!isset($_SESSION['sessionActive']) && isset($_POST['AccountActiveForSessionActive'])){
+   if(!isset($_SESSION['sessionActive']) && (isset($_POST['AccountActiveForSessionActive']) || !empty($_POST['AccountActiveForNewSession']))){
        if(!empty($_POST['AccountActiveForSessionActive']) && !empty($_POST['AccountActiveForNewSession'])){
               $_SESSION['errorDoubleInput'] = 'Vous ne pouvez pas vous connectez et créer une session en même temps.';
        }else if(!empty($_POST['AccountActiveForSessionActive'])){
@@ -57,14 +58,12 @@ if(isset($_POST['inputUser']) && isset($_POST['inputPassword'])){
                             'userName' => $_SESSION['userActive'],
                             'sessionKey' => $accountActiveForNewSession
                      ]);
-                     $sessionAttri->fetchAll();
 
                      $addNewSession = $mySqlConnection -> prepare('INSERT INTO `sessionsusers`(`sessionKey`, `UserSession`) VALUES (:sessionKey, :UserSession)');
                      $addNewSession -> execute([
                             'sessionKey' => $accountActiveForNewSession,
                             'UserSession' => $_SESSION['userActive']
                      ]);
-                     $addNewSession -> fetchAll();
               }
        }
        
@@ -111,6 +110,12 @@ if(isset($_POST['inputUser']) && !isset($_SESSION['userActive'])){
               $_SESSION['errorUser'] = 'Il y a une erreur avec le nom d\'utilisateur ou le MDP.';
        }
        
+}
+
+if(isset($_POST['AccountActiveForSessionActive']) && !isset($_SESSION['userActive'])){
+       if($_SERVER['PHP_SELF'] == '/ma-liste/index.php'){
+              $_SESSION['errorSession'] = 'Il y a une erreur avec la session';
+       }
 }
 
 
@@ -314,12 +319,6 @@ if(isset($_POST['deleteAccount']) && isset($_POST['ConfDeleteAccount'])){
                      ]);
                      $part[$i] = $selectParts->fetchAll();
 
-                     $selectAttri = $mySqlConnection->prepare('SELECT `userName` FROM `attributions` WHERE sessionKey = :sessionKey');
-                     $selectAttri->execute([
-                       'sessionKey' => $own['sessionKey']
-                     ]);
-                     $attri[$i] = $selectAttri->fetchAll();
-
               }
 
               try {
@@ -342,14 +341,12 @@ if(isset($_POST['deleteAccount']) && isset($_POST['ConfDeleteAccount'])){
                                           'sessionKey' => $own['sessionKey']
                                    ]);
                             }
-              
-                            if(count($attri[$u]) != 0){
-                                   $delAttri = $mySqlConnection->prepare('DELETE FROM attributions WHERE sessionKey = :sessionKey');
-                                   $delAttri->execute([
-                                          'sessionKey' => $own['sessionKey']
-                                   ]);
-                            }
                      }
+
+                     $delSpecSession = $mySqlConnection->prepare('DELETE FROM `attributions` WHERE userName = :userName');
+                     $delSpecSession->execute([
+                            'userName' => $_SESSION['userActive']
+                     ]);
 
                      $delSession = $mySqlConnection->prepare('DELETE FROM sessionsusers WHERE UserSession = :UserSession');
                      $delSession->execute([
@@ -400,8 +397,6 @@ if(isset($_POST['emailForSupport']) && isset($_POST['messageForSupport'])){
               $_SESSION['errorMessageSupport'] = 'Vous tentez d\'envoyer des informations inexploitables'; 
        };
 }
-
-
 
 function validInput($param){
     $param = trim($param);
