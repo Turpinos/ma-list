@@ -133,16 +133,12 @@ if(isset($inputCrtUser) && isset($inputCrtPassword) && !empty($inputCrtUser) && 
 
     
 if(isset($_POST['inputUser']) && !isset($_SESSION['userActive'])){
-       if($_SERVER['PHP_SELF'] == '/ma-liste/index.php'){
-              $_SESSION['errorUser'] = 'Il y a une erreur avec le nom d\'utilisateur ou le MDP.';
-       }
+       $_SESSION['errorUser'] = 'Il y a une erreur avec le nom d\'utilisateur ou le MDP.';
        
 }
 
 if(isset($_POST['AccountActiveForSessionActive']) && !isset($_SESSION['userActive'])){
-       if($_SERVER['PHP_SELF'] == '/ma-liste/index.php'){
-              $_SESSION['errorSession'] = 'Il y a une erreur avec la session';
-       }
+       $_SESSION['errorSession'] = 'Il y a une erreur avec la session';
 }
 
 
