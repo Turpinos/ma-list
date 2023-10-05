@@ -65,7 +65,7 @@
                     <div><p>Ou créer une session:</p></div>
                     <div>
                         <label for="AccountActiveForNewSession">Session:</label>
-                        <input type="text" name="AccountActiveForNewSession">
+                        <input type="text" maxlength="25" name="AccountActiveForNewSession">
                     </div>
                     <button type="submit">Connexion</button>
                     <div class='alert'>
@@ -92,11 +92,11 @@
                         <h3>Inscription</h3>
                         <div>
                             <label for="inputCrtUser">Pseudo:</label>
-                            <input type="text" name="inputCrtUser">
+                            <input type="text" maxlength="35" name="inputCrtUser">
                         </div>
                         <div>
                             <label for="inputCrtPassword">Mot de passe:</label>
-                            <input class="switchPassword" minlength="10" type="password" name="inputCrtPassword"><p class="indicatorSwitch"><img src="img/cadenas-verrouille.png"></p>
+                            <input class="switchPassword" minlength="10" maxlength="25" type="password" name="inputCrtPassword"><p class="indicatorSwitch"><img src="img/cadenas-verrouille.png"></p>
                         </div>
                         <button type="submit">Créer un compte</button>
                     </form>
@@ -151,7 +151,7 @@
             <div><p>Ou créer une session:</p></div>
             <div>
                 <label for="AccountActiveForNewSession">Session:</label>
-                <input type="text" name="AccountActiveForNewSession">
+                <input type="text" maxlength="25" name="AccountActiveForNewSession">
             </div>
             <button type="submit">Connexion</button>
             <div class='alert'>
@@ -176,6 +176,11 @@
                 if(isset($_SESSION['nameModerator'])){
                     unset($_SESSION['nameModerator']);
                 };
+
+                if(isset($_SESSION['errorLengthSession'])){
+                    echo '<p>'. $_SESSION['errorLengthSession'] .'</p>';
+                    unset($_SESSION['errorLengthSession']);
+                }
 
                 if(isset($_SESSION['errorSessionName'])){
                     echo '<p>'. $_SESSION['errorSessionName'] .'</p>';
@@ -215,12 +220,12 @@
                 <h3>Inscription</h3>
                 <div>
                     <label for="inputCrtUser">Pseudo:</label>
-                    <input type="text" name="inputCrtUser">
+                    <input type="text" maxlength="35" name="inputCrtUser">
                 </div>
                 <div>
                     <label for="inputCrtPassword">Mot de passe:</label>
                     <div>
-                    <input class="switchPassword" minlength="10" type="password" name="inputCrtPassword"><p class="indicatorSwitch"><img src="img/cadenas-verrouille.png"></p>
+                    <input class="switchPassword" minlength="10" maxlength="25" type="password" name="inputCrtPassword"><p class="indicatorSwitch"><img src="img/cadenas-verrouille.png"></p>
                     </div>
                 </div>
                 <button type="submit">Créer un compte</button>
@@ -240,6 +245,16 @@
                     if(isset($_SESSION['errorUserAlreadyExists'])){
                         echo '<p>'. $_SESSION['errorUserAlreadyExists'] .'</p>';
                         unset($_SESSION['errorUserAlreadyExists']);
+                    }
+
+                    if(isset($_SESSION['errorLengthPass'])){
+                        echo '<p>'. $_SESSION['errorLengthPass'] .'</p>';
+                        unset($_SESSION['errorLengthPass']);
+                    }
+
+                    if(isset($_SESSION['errorLengthName'])){
+                        echo '<p>'. $_SESSION['errorLengthName'] .'</p>';
+                        unset($_SESSION['errorLengthName']);
                     }
 
                     ?>

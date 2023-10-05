@@ -51,7 +51,7 @@ if(isset($_POST['inputUser']) && isset($_POST['inputPassword'])){
 
               $accountActiveForNewSession = validInput($_POST['AccountActiveForNewSession']);
 
-              if(!isset($_SESSION['errorSessionIsActive']) && !preg_match('/["\'(|;,><{=})(.]/', $_POST['AccountActiveForNewSession']) && !empty($accountActiveForNewSession) && isset($_SESSION['userActive'])){
+              if(!isset($_SESSION['errorSessionIsActive']) && !preg_match('/["\'(|;,><{=})(.]/', $_POST['AccountActiveForNewSession']) && !empty($accountActiveForNewSession) && isset($_SESSION['userActive']) && strlen($_POST['AccountActiveForNewSession']) <= 25){
                      $_SESSION['sessionActive'] = $accountActiveForNewSession;
                      $_SESSION['nameModerator'] = $_SESSION['userActive'];
 
@@ -70,6 +70,10 @@ if(isset($_POST['inputUser']) && isset($_POST['inputPassword'])){
                      if(preg_match('/["\'(|;,><{=})(.]/', $_POST['AccountActiveForNewSession'])){
                             $_SESSION['errorSessionName'] = "Le nom de session est invalide";
                      }
+
+                     if(strlen($_POST['AccountActiveForNewSession']) > 25){
+                            $_SESSION['errorLengthSession'] = 'Le nom de session est trop long';
+                     }
               }
        }
        
@@ -82,16 +86,24 @@ if(isset($_POST['inputCrtUser'])){
        if(empty($inputCrtUser) || preg_match('/["\'(|;,><{=})(.]/', $_POST['inputCrtUser'])){
               $_SESSION['errorCrtUser'] = 'Votre pseudo est invalide';
        }
+
+       if(strlen($_POST['inputCrtUser']) > 35){
+              $_SESSION['errorLengthName'] = 'Le pseudo est trop long';
+       }
 }
 
 if(isset($_POST['inputCrtPassword'])){
        $inputCrtPassword = trim(validInput($_POST['inputCrtPassword']));
-       if(empty($inputCrtPassword) || preg_match('/[^ "\'(|><{=})(.]/', $_POST['inputCrtPassword'])){
+       if(empty($inputCrtPassword) || preg_match('/["\'(|><{=})(.]/', $_POST['inputCrtPassword'])){
               $_SESSION['errorCrtPassword'] = 'Votre mot de passe est invalide';
+       }
+
+       if(strlen($_POST['inputCrtPassword']) > 25){
+              $_SESSION['errorLengthPass'] = 'Le MDP est trop long';
        }
 }
 
-if(isset($inputCrtUser) && isset($inputCrtPassword) && !empty($inputCrtUser) && !empty($inputCrtPassword) && !preg_match('/["\'(|><{=})(.]/', $_POST['inputCrtPassword']) && !preg_match('/["\'(|;,><{=})(.]/', $_POST['inputCrtUser'])){
+if(isset($inputCrtUser) && isset($inputCrtPassword) && !empty($inputCrtUser) && !empty($inputCrtPassword) && !preg_match('/["\'(|><{=})(.]/', $_POST['inputCrtPassword']) && !preg_match('/["\'(|;,><{=})(.]/', $_POST['inputCrtUser']) && strlen($_POST['inputCrtPassword']) <= 25 && strlen($_POST['inputCrtUser']) <= 35){
        
        foreach($users as $user){
            if($user['userName'] == $_POST['inputCrtUser']){
