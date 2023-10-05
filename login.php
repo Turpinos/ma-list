@@ -96,31 +96,9 @@
                         </div>
                         <div>
                             <label for="inputCrtPassword">Mot de passe:</label>
-                            <input class="switchPassword" type="password" name="inputCrtPassword"><p class="indicatorSwitch"><img src="img/cadenas-verrouille.png"></p>
+                            <input class="switchPassword" minlength="10" type="password" name="inputCrtPassword"><p class="indicatorSwitch"><img src="img/cadenas-verrouille.png"></p>
                         </div>
                         <button type="submit">Créer un compte</button>
-                    </form>
-                    <form class="formLogin" action="login.php" method="post">
-                        <h3>Message au support</h3>
-                        <div>
-                            <label for="emailForSupport">Votre email:</label>
-                            <input type="text" name="emailForSupport" required>
-                        </div>
-                        <div>
-                            <label for="messageForSupport">Votre message:</label>
-                            <textarea name="messageForSupport" maxlength="250" cols="20" required></textarea>
-                        </div>
-                        <button type="submit">Envoyer</button>
-                        <div class="alert">
-                            <?php 
-
-                            if(isset($_SESSION['errorMessageSupport'])){
-                                echo '<p>'. $_SESSION['errorMessageSupport'] .'</p>';
-                                unset($_SESSION['errorMessageSupport']);
-                            };
-
-                            ?>
-                        </div>
                     </form>
                 </div>
             </main>
@@ -198,6 +176,11 @@
                 if(isset($_SESSION['nameModerator'])){
                     unset($_SESSION['nameModerator']);
                 };
+
+                if(isset($_SESSION['errorSessionName'])){
+                    echo '<p>'. $_SESSION['errorSessionName'] .'</p>';
+                    unset($_SESSION['errorSessionName']);
+                }
                 
                 if(isset($_SESSION['errorUser'])){
                     echo '<p>'. $_SESSION['errorUser'] .'</p>';
@@ -237,7 +220,7 @@
                 <div>
                     <label for="inputCrtPassword">Mot de passe:</label>
                     <div>
-                    <input class="switchPassword" type="password" name="inputCrtPassword"><p class="indicatorSwitch"><img src="img/cadenas-verrouille.png"></p>
+                    <input class="switchPassword" minlength="10" type="password" name="inputCrtPassword"><p class="indicatorSwitch"><img src="img/cadenas-verrouille.png"></p>
                     </div>
                 </div>
                 <button type="submit">Créer un compte</button>
@@ -258,28 +241,6 @@
                         echo '<p>'. $_SESSION['errorUserAlreadyExists'] .'</p>';
                         unset($_SESSION['errorUserAlreadyExists']);
                     }
-
-                    ?>
-                </div>
-            </form>
-            <form class="formLogin" action="login.php" method="post">
-                <h3>Message au support</h3>
-                <div>
-                    <label for="emailForSupport">Votre email:</label>
-                    <input type="text" name="emailForSupport" required>
-                </div>
-                <div>
-                    <label for="messageForSupport">Votre message:</label>
-                    <textarea name="messageForSupport" maxlength="250" cols="20" required></textarea>
-                </div>
-                <button type="submit">Envoyer</button>
-                <div class="alert">
-                    <?php 
-
-                    if(isset($_SESSION['errorMessageSupport'])){
-                        echo '<p>'. $_SESSION['errorMessageSupport'] .'</p>';
-                        unset($_SESSION['errorMessageSupport']);
-                    };
 
                     ?>
                 </div>

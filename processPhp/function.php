@@ -48,8 +48,10 @@ if(isset($_POST['inputUser']) && isset($_POST['inputPassword'])){
                             $_SESSION['errorSessionIsActive'] = "La session existe déjà.";
                      }
               }
+
               $accountActiveForNewSession = validInput($_POST['AccountActiveForNewSession']);
-              if(!isset($_SESSION['errorSessionIsActive']) && !empty($accountActiveForNewSession) && isset($_SESSION['userActive'])){
+
+              if(!isset($_SESSION['errorSessionIsActive']) && !preg_match('/["\'(|;,><{=})(.]/', $_POST['AccountActiveForNewSession']) && !empty($accountActiveForNewSession) && isset($_SESSION['userActive'])){
                      $_SESSION['sessionActive'] = $accountActiveForNewSession;
                      $_SESSION['nameModerator'] = $_SESSION['userActive'];
 
@@ -64,6 +66,10 @@ if(isset($_POST['inputUser']) && isset($_POST['inputPassword'])){
                             'sessionKey' => $accountActiveForNewSession,
                             'UserSession' => $_SESSION['userActive']
                      ]);
+              }else{
+                     if(preg_match('/["\'(|;,><{=})(.]/', $_POST['AccountActiveForNewSession'])){
+                            $_SESSION['errorSessionName'] = "Le nom de session est invalide";
+                     }
               }
        }
        
@@ -73,33 +79,42 @@ if(isset($_POST['inputUser']) && isset($_POST['inputPassword'])){
 //Validation de connexion pour une creation de compte..
 if(isset($_POST['inputCrtUser'])){
        $inputCrtUser = validInput($_POST['inputCrtUser']);
-       if(empty($inputCrtUser)){
-              $_SESSION['errorCrtUser'] = 'Votre pseudo contient des caractères inutilisables';
+       if(empty($inputCrtUser) || preg_match('/["\'(|;,><{=})(.]/', $_POST['inputCrtUser'])){
+              $_SESSION['errorCrtUser'] = 'Votre pseudo est invalide';
        }
 }
 
 if(isset($_POST['inputCrtPassword'])){
-       $inputCrtPassword = validInput($_POST['inputCrtPassword']);
-       if(empty($inputCrtPassword)){
-              $_SESSION['errorCrtPassword'] = 'Votre mot de passe contient des caractères inutilisables';
+       $inputCrtPassword = trim(validInput($_POST['inputCrtPassword']));
+       if(empty($inputCrtPassword) || preg_match('/[^ "\'(|><{=})(.]/', $_POST['inputCrtPassword'])){
+              $_SESSION['errorCrtPassword'] = 'Votre mot de passe est invalide';
        }
 }
 
-if(isset($inputCrtUser) && isset($inputCrtPassword) && !empty($inputCrtUser) && !empty($inputCrtPassword)){
+if(isset($inputCrtUser) && isset($inputCrtPassword) && !empty($inputCrtUser) && !empty($inputCrtPassword) && !preg_match('/["\'(|><{=})(.]/', $_POST['inputCrtPassword']) && !preg_match('/["\'(|;,><{=})(.]/', $_POST['inputCrtUser'])){
        
        foreach($users as $user){
            if($user['userName'] == $_POST['inputCrtUser']){
                   $_SESSION['errorUserAlreadyExists'] = "Ce nom d'utilisateur est déjà existant.";
            }
-       }   
+       }  
+              
+       if(!empty($_SERVER['HTTP_CLIENT_IP'])){
+              $ip = "prox-". $_SERVER['HTTP_CLIENT_IP'];
+       }elseif(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])){
+              $ip = "shared-". $_SERVER['HTTP_X_FORWARDED_FOR'];
+       }else{
+              $ip = "ip-". $_SERVER['REMOTE_ADDR'];
+       }
        
        if(!isset($_SESSION['errorUserAlreadyExists'])){
               $_SESSION['placeholderPseudo'] = $inputCrtUser;
               $_SESSION['placeHolderpass'] = $inputCrtPassword;
-              $addUser = $mySqlConnection -> prepare('INSERT INTO `users`(`userName`, `userKey`) VALUES (:userName, :userKey)');
+              $addUser = $mySqlConnection -> prepare('INSERT INTO `users`(`userName`, `userKey`, `ip`) VALUES (:userName, :userKey, :ip)');
               $addUser -> execute([
                      'userName' => $inputCrtUser,
-                     'userKey' => password_hash($inputCrtPassword, PASSWORD_DEFAULT)
+                     'userKey' => password_hash($inputCrtPassword, PASSWORD_DEFAULT),
+                     'ip' => $ip
               ]);
        }
 }
@@ -382,24 +397,7 @@ if(isset($_POST['deleteAccount']) && isset($_POST['ConfDeleteAccount'])){
 
 //____________________________________Envoi mail au support______________________________________//
 
-if(isset($_POST['emailForSupport']) && isset($_POST['messageForSupport'])){
-
-       $email = validInput($_POST['emailForSupport']);
-       $message = validInput($_POST['messageForSupport']);
-
-       if(!empty($email) && !empty($message)){
-              $to = 'arthur58230@hotmail.fr';
-              $subject = 'Support de "Ma liste"';
-              $message = $message;
-              $header = 'From: '. $email . '\r\n';
-              mail($to, $subject, $message, $header);
-       }else{
-              $_SESSION['errorMessageSupport'] = 'Vous tentez d\'envoyer des informations inexploitables'; 
-       };
-}
-
 function validInput($param){
-    $param = trim($param);
     $param = strip_tags($param);
     $param = htmlspecialchars($param);
     return $param;
