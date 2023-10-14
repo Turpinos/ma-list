@@ -132,7 +132,7 @@ if(isset($inputCrtUser) && isset($inputCrtPassword) && !empty($inputCrtUser) && 
 }
 
     
-if(isset($_POST['inputUser']) && !isset($_SESSION['userActive'])){
+if(isset($_POST['inputUser']) && !isset($_SESSION['userActive']) && !$search){
        $_SESSION['errorUser'] = 'Il y a une erreur avec le nom d\'utilisateur ou le MDP.';
        
 }
