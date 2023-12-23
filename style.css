@@ -790,12 +790,19 @@ footer #download:active, footer #save:active, footer #disconnect:active{
     justify-content: center;
     width: 70%;
     padding-left: 2rem;
+    gap: 0.5rem;
 }
 
+.cardTask:first{
+    margin: auto;
+}
+
+
 .cardTask{
-    margin: 0.3rem 0.3rem;
+    margin: auto;
     width: 350px;
 }
+
 
 
 

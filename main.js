@@ -159,8 +159,14 @@ function loadDoc(){
 if(typeof nameTask != null && typeof dateFrom != null && typeof dateTo != null && selectPersonnel != null){
 
     nameTask.addEventListener('blur', function(e){
-        newTask.name =  e.target.value;
-        document.getElementById('task-name').innerHTML = '<span class="legend">Nom: </span>' + e.target.value;
+        if(e.target.value.length > 20){
+            document.getElementById('task-name').innerHTML = '<span class="legend">Nom: </span>Le nom est trop grand';
+            document.getElementById('task-name').style.color = 'rgb(255, 111, 111)';
+            newTask.name =  '';
+        }else{
+            newTask.name =  e.target.value;
+            document.getElementById('task-name').innerHTML = '<span class="legend">Nom: </span>' + e.target.value;
+        }
     });
     
     dateFrom.addEventListener('blur', function(e){
@@ -709,7 +715,7 @@ window.addEventListener('DOMContentLoaded', function(){
                newTask.name = '';
                newTask.from = '';
                newTask.to = '';
-               newTask.personnel = '';
+               newTask.personnel = [];
                nameTask.value = '';
                dateFrom.value = '';
                dateTo.value = '';
