@@ -3,6 +3,7 @@ session_start();
 require_once('processPhp/initBDD.php');
 require_once('processPhp/validEnvoieBDD.php');
 ?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -22,6 +23,7 @@ require_once('processPhp/validEnvoieBDD.php');
                 <script>
                     localStorage.removeItem(localStorage.getItem('infoConnection'));
                     localStorage.removeItem(`${localStorage.getItem('infoConnection')}_part`);
+                    localStorage.removeItem(`${localStorage.getItem('infoConnection')}_toDo`);
                 </script>
                 <div id="validInput">
                     <h1>C'est tout bon!</h1>

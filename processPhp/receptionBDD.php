@@ -27,4 +27,25 @@ if(isset($_SESSION['sessionActive'])){
     $listSpec = $attribution->fetchAll(PDO::FETCH_ASSOC);
 }
 
+if(isset($_SESSION['sessionActive'])){
+    $task = $mySqlConnection->prepare('SELECT `taskName` as nameTask, `dateFrom`, `dateTo`, `personnel` as `selectPersonnel` FROM `agenda` WHERE sessionKey = :sessionKey');
+    $task-> execute([
+        'sessionKey' => $_SESSION['sessionActive']
+    ]);
+    $taskLs = $task->fetchAll(PDO::FETCH_ASSOC);
+    if($_SESSION['nameModerator'] == $_SESSION['userActive']){
+        $taskList = json_encode($taskLs);
+    }else{
+        $arrayTask = [];
+        foreach($taskLs as $oneTask){
+            $str = $oneTask['selectPersonnel'];
+            if(preg_match('/'.$_SESSION['userActive'].'/', $str)){
+                array_push($arrayTask, $oneTask);
+            }
+        }
+        $taskList = json_encode($arrayTask);
+    }
+    
+}
+
 ?>

@@ -61,6 +61,29 @@ if(isset($_SESSION['sessionActive'])){
         }
     }
 
+    if(isset($_POST['task']['nameTask0']) && isset($_POST['task']['dateFrom0']) && isset($_POST['task']['dateTo0']) && isset($_POST['task']['selectPersonnel0']) || !isset($_POST['task']['nameTask0']) && !isset($_POST['task']['dateFrom0']) && !isset($_POST['task']['dateTo0']) && !isset($_POST['task']['selectPersonnel0'])){
+        $removeSessionTask = $mySqlConnection -> prepare('DELETE FROM agenda WHERE sessionKey = (:sessionKey)');
+        $removeSessionTask-> execute([
+            'sessionKey' => $_SESSION['sessionActive']
+        ]);
+
+        if(isset($_POST['task']['nameTask0']) && isset($_POST['task']['dateFrom0']) && isset($_POST['task']['dateTo0']) && isset($_POST['task']['selectPersonnel0'])){
+            $countTask = count($_POST['task'])/4;
+
+
+            for($i = 0; $i < $countTask; $i++){
+                $addSessionTask = $mySqlConnection-> prepare('INSERT INTO agenda (`taskName`, `dateFrom`, `dateTo`, `personnel`, `sessionKey`) VALUES (:taskName, :dateFrom, :dateTo, :personnel, :sessionKey)');
+                $addSessionTask->execute([
+                    'taskName' => htmlspecialchars(strip_tags($_POST['task']['nameTask'.$i])),
+                    'dateFrom' => htmlspecialchars(strip_tags($_POST['task']['dateFrom'.$i])),
+                    'dateTo' => htmlspecialchars(strip_tags($_POST['task']['dateTo'.$i])),
+                    'personnel' => htmlspecialchars(strip_tags($_POST['task']['selectPersonnel'.$i])),
+                    'sessionKey' => htmlspecialchars(strip_tags($_SESSION['sessionActive']))
+                ]);
+            }
+        }
+    }
+
 }else{
     
     $connected = false;

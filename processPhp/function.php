@@ -16,7 +16,7 @@ if(isset($_POST['inputUser']) && isset($_POST['inputPassword'])){
        }   
    }
 
-   //Recherche apres connexion si le compte possède des attributions..
+   //Recherche après connexion si le compte possède des attributions..
    if($search){
        $session = $mySqlConnection->prepare('SELECT `userName`, `sessionKey` FROM `attributions` WHERE userName = :userName');
        $session->execute([

@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,300&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="img/liste.png">
-    <title>Ma liste</title>
+    <title>Ma liste - Connexion</title>
 </head>
 <body>
     <header>
@@ -96,9 +96,15 @@
                         </div>
                         <div>
                             <label for="inputCrtPassword">Mot de passe:</label>
-                            <input class="switchPassword" minlength="10" maxlength="25" type="password" name="inputCrtPassword"><p class="indicatorSwitch"><img src="img/cadenas-verrouille.png"></p>
+                            <div>
+                                <input class="switchPassword" minlength="10" maxlength="25" type="password" name="inputCrtPassword"><p class="indicatorSwitch"><img src="img/cadenas-verrouille.png"></p>
+                            </div>
                         </div>
-                        <button type="submit">Créer un compte</button>
+                        <div>
+                            <label for="confirmPassword">Confirmez le MPD:</label>
+                            <input id="confPassword" minlength="10" maxlength="25" type="password">
+                        </div>
+                        <button id="createButton" type="submit">Créer un compte</button>
                     </form>
                 </div>
             </main>
@@ -225,10 +231,14 @@
                 <div>
                     <label for="inputCrtPassword">Mot de passe:</label>
                     <div>
-                    <input class="switchPassword" minlength="10" maxlength="25" type="password" name="inputCrtPassword"><p class="indicatorSwitch"><img src="img/cadenas-verrouille.png"></p>
+                        <input class="switchPassword" minlength="10" maxlength="25" type="password" name="inputCrtPassword"><p class="indicatorSwitch"><img src="img/cadenas-verrouille.png"></p>
                     </div>
                 </div>
-                <button type="submit">Créer un compte</button>
+                <div>
+                    <label for="confirmPassword">Confirmez le MPD:</label>
+                    <input id="confPassword" minlength="10" maxlength="25" type="password">
+                </div>
+                <button id="createButton" type="submit">Créer un compte</button>
                 <div class="alert">
                     <?php
 

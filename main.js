@@ -27,6 +27,22 @@ let year = date.getFullYear().toString();
 let month = (date.getMonth()+1).toString();
 let day = date.getDate().toString();
 
+//Recuperation form "to-do"..
+const nameTask = document.getElementById('task');
+const dateFrom = document.getElementById('dateFrom');
+const dateTo = document.getElementById('dateTo');
+const selectPersonnel = document.getElementById('personnel');
+const buttonTask = document.getElementById('addTask');
+const divPreLoad = document.getElementById('pre-load');
+let localList = [];
+//Creation objet type pour to-do..
+let newTask = {
+    name: '',
+    from: '',
+    to: '',
+    personnel: []
+}
+
 //Contiendra les info des items a envoyer en base avec la fonction savingItems()..
 let savedForm = document.querySelector('#formToSave');
 
@@ -139,6 +155,187 @@ function loadDoc(){
         
 }
 
+//Configuration d'une tâche..
+if(typeof nameTask != null && typeof dateFrom != null && typeof dateTo != null && selectPersonnel != null){
+
+    nameTask.addEventListener('blur', function(e){
+        newTask.name =  e.target.value;
+        document.getElementById('task-name').innerHTML = '<span class="legend">Nom: </span>' + e.target.value;
+    });
+    
+    dateFrom.addEventListener('blur', function(e){
+        if(newTask.to > e.target.value || newTask.to == ''){
+            newTask.from = e.target.value;
+            document.getElementById('taskFrom').innerHTML = '<span class="legend">De: </span>' + e.target.value;
+        }else{
+            document.getElementById('taskFrom').innerHTML = '<span class="legend">Il y a une erreur avec les horaires </span>';
+        }
+        
+    });
+    
+    dateTo.addEventListener('blur', function(e){
+        if(newTask.from < e.target.value && newTask.from != ''){
+            newTask.to = e.target.value;
+            document.getElementById('taskTo').innerHTML = '<span class="legend">À: </span>' + e.target.value;
+        }else{
+            document.getElementById('taskTo').innerHTML = '<span class="legend">Il y a une erreur avec les horaires</span>';
+        }
+        
+    });
+    
+    selectPersonnel.addEventListener('blur', function(e){
+    
+        if(e.target.value != '' && !newTask.personnel.includes(e.target.value)){
+            newTask.personnel.push(e.target.value);
+            document.getElementById('taskPersonnel').innerHTML = '<span class="legend">Avec: </span>' + newTask.personnel.map((perso) => `<span class='delPerso'> ${perso}</span>`);
+            suppPreload();
+    
+        }
+    });
+}
+
+
+//Suppression d'un élément..
+function suppPreload(){
+    let delPerso = document.querySelectorAll('.delPerso');
+
+    for (let i = 0; i < delPerso.length; i++) {
+        delPerso[i].addEventListener('click', function(){
+            newTask.personnel.splice(i, 1);
+            document.getElementById('taskPersonnel').innerHTML = '<span class="legend">Avec: </span>' + newTask.personnel.map((perso) => `<span class='delPerso'> ${perso}</span>`);
+            suppPreload();
+        });
+    }
+}
+    
+function loadTask(){
+    document.getElementById('to-do-list').innerHTML = '';
+    let ind = 0;
+    if(localList.length == 0){
+        let pEmpty = document.createElement('p');
+        pEmpty.innerText = 'Aucune tâche pour le moment';
+        pEmpty.style.textAlign = 'center';
+        document.getElementById('to-do-list').appendChild(pEmpty);
+        
+    }
+    for (const task of localList) {
+
+        let container = document.createElement('div');
+        container.setAttribute('class', 'cardTask');
+
+        let infoContainer = document.createElement('div');
+        infoContainer.setAttribute('class', 'infoContainer');
+
+        let titleTask = document.createElement('h5');
+        titleTask.innerText = task.nameTask;
+
+        let infoDiv = document.createElement('div');
+        infoDiv.setAttribute('class', 'info');
+
+        let pTime = document.createElement('div');
+        pTime.setAttribute('class', 'time');
+
+        let pFrom = document.createElement('p');
+        pFrom.innerText = 'De: ' + task.dateFrom;
+
+        let pTo = document.createElement('p');
+        pTo.innerText = 'À: ' + task.dateTo;
+
+        let pSelect = document.createElement('p');
+        if(typeof task.selectPersonnel == 'string'){
+            let a = task.selectPersonnel.split(',');
+            pSelect.innerHTML = 'Avec: ' + a.map((perso) => ` ${perso}`);
+        }else{
+            pSelect.innerHTML = 'Avec: ' + task.selectPersonnel.map((perso) => ` ${perso}`);
+        }
+        
+
+        let timeContainer = document.createElement('div');
+        timeContainer.setAttribute('class', 'timeContainer');
+
+        let pLabelTime = document.createElement('p');
+
+        let pCurrentTime = document.createElement('p');
+        const from = task.dateFrom.split(':');
+        const hrFrom = parseInt(from[0]);
+        const mnFrom = parseInt(from[1]);
+
+        const to = task.dateTo.split(':');
+        const hrTo = parseInt(to[0]);
+        const mnTo = parseInt(to[1]);
+        convertTime(container, pLabelTime, pCurrentTime, hrFrom, mnFrom, hrTo, mnTo);
+        setInterval(()=>convertTime(container, pLabelTime, pCurrentTime, hrFrom, mnFrom, hrTo, mnTo), 5000)
+        
+
+        let suppr;
+        if(typeof moderator != 'undefined'){
+            suppr = document.createElement('p');
+            suppr.setAttribute('data', ind);
+            suppr.innerText = 'Supprimer';
+            suppr.addEventListener('click', function(){
+                localList.splice(suppr.getAttribute('data'), 1);
+                localStorage.setItem(`${NoSavedItems}_toDo`, JSON.stringify(localList));
+                loadTask();
+            });
+        }
+        
+
+        document.getElementById('to-do-list').appendChild(container);
+        infoContainer.appendChild(titleTask);
+        infoContainer.appendChild(infoDiv);
+        container.appendChild(infoContainer);
+        container.appendChild(timeContainer);
+        timeContainer.appendChild(pLabelTime);
+        timeContainer.appendChild(pCurrentTime);
+        if(typeof moderator != 'undefined'){
+            timeContainer.appendChild(suppr);
+        }
+        pTime.appendChild(pFrom);
+        pTime.appendChild(pTo);
+        infoDiv.appendChild(pTime);
+        infoDiv.appendChild(pSelect);
+        
+        ind++
+    }
+}
+
+function convertTime(container, pLabelTime, pCurrentTime, hrFrom, mnFrom, hrTo, mnTo){
+
+    const currentTime = new Date();
+    const curHr = currentTime.getHours();
+    const curMn = currentTime.getMinutes();
+
+    const currTime = (curHr * 60) + curMn;
+
+    const fromTime = (hrFrom * 60) + mnFrom;
+
+    const toTime = (hrTo * 60) + mnTo;
+
+    if(currTime < fromTime){
+
+        const subTime = fromTime - currTime;
+        const restHr = subTime / 60;
+        const restMin = subTime % 60;
+
+        pLabelTime.innerText = 'Commence dans';
+        pCurrentTime.innerHTML = `${Math.floor(restHr)}:${restMin < 10 ? '0' + restMin : restMin}`;
+
+    }else if(currTime >= fromTime && currTime < toTime){
+
+        const subTime = toTime - currTime;
+        const restHr = subTime / 60;
+        const restMin = subTime % 60;
+
+        pLabelTime.innerText = 'Termine dans';
+        pCurrentTime.innerHTML = `${Math.floor(restHr)}:${restMin < 10 ? '0' + restMin : restMin}`;
+
+    }else if( currTime > toTime){
+
+        pCurrentTime.innerText = 'Terminée';
+        container.style.opacity = '0.5';
+    }    
+}
+
 //Creation d'un item..
 function addItem(){
 
@@ -218,6 +415,41 @@ function savingItems(){
         savedForm.appendChild(contributionInput);
 
         indexB++;
+    }
+
+    let indexC = 0;
+    for(let element of localList){
+
+        let nameInput = document.createElement('input');
+        nameInput.setAttribute('name', `task[nameTask${indexC}]`);
+        nameInput.setAttribute('value', element.nameTask);
+        nameInput.setAttribute('type', 'hidden');
+
+        let dateInputA = document.createElement('input');
+        dateInputA.setAttribute('name', `task[dateFrom${indexC}]`);
+        dateInputA.setAttribute('value', element.dateFrom);
+        dateInputA.setAttribute('type', 'hidden');
+
+        let dateInputB = document.createElement('input');
+        dateInputB.setAttribute('name', `task[dateTo${indexC}]`);
+        dateInputB.setAttribute('value', element.dateTo);
+        dateInputB.setAttribute('type', 'hidden');
+
+        let selectInput = document.createElement('input');
+        selectInput.setAttribute('name', `task[selectPersonnel${indexC}]`);
+        if(typeof element.selectPersonnel == 'string'){
+            selectInput.setAttribute('value', element.selectPersonnel)
+        }else{
+            selectInput.setAttribute('value', `${element.selectPersonnel.map((perso) => `${perso}`)}`)
+        }
+        selectInput.setAttribute('type', 'hidden');
+
+        savedForm.appendChild(nameInput);
+        savedForm.appendChild(dateInputA);
+        savedForm.appendChild(dateInputB);
+        savedForm.appendChild(selectInput);
+
+        indexC++;
     }
     
 };
@@ -421,21 +653,6 @@ window.addEventListener('DOMContentLoaded', function(){
      localStorage.setItem('infoConnection', `${infoUser.textContent}+${infoSession.textContent}`);
      NoSavedItems = localStorage.getItem('infoConnection');
 
-    //Supprimer le localStorage items s'il est vide au chargement..
-    if(localStorage.getItem(NoSavedItems)){
-        let testLength = JSON.parse(localStorage.getItem(NoSavedItems));
-        if(testLength.length == 0){
-            localStorage.removeItem(NoSavedItems);
-        };
-    };
-
-    //Supprimer le localStorage participants s'il est vide au chargement..
-    if(localStorage.getItem(`${NoSavedItems}_part`)){
-        let testLength = JSON.parse(localStorage.getItem(`${NoSavedItems}_part`));
-        if(testLength.length == 0){
-            localStorage.removeItem(`${NoSavedItems}_part`);
-        };
-    };
 
     //Conversion de la BDD pour les items et participants de json en un object traitable..
     if(localStorage.getItem(NoSavedItems)){
@@ -449,10 +666,17 @@ window.addEventListener('DOMContentLoaded', function(){
     }else{
         localParticipants = JSON.parse(peoples);
     }
-    
+
+    if(localStorage.getItem(`${NoSavedItems}_toDo`)){
+        localList = JSON.parse(localStorage.getItem(`${NoSavedItems}_toDo`))
+    }else{
+        localList = JSON.parse(toDoList);
+    } 
     loadDoc();
 
     loadParticipants();
+
+    loadTask();
 
     //Ajout d'un item..
     if(buttonAdd != null){
@@ -463,13 +687,68 @@ window.addEventListener('DOMContentLoaded', function(){
         });
     };
 
+    //Création d'une tâche..
+    if(buttonTask != null){
+
+        buttonTask.addEventListener('click', function(){
+
+            let trimName = newTask.name;
+            let trimDateFrom = newTask.from;
+            let trimDateTo = newTask.to;
+            let trimselect = newTask.personnel;
+    
+            if(trimName.trim() != '' && trimDateFrom.trim() != '' && trimDateTo.trim() != '' && trimselect.length != 0){
+               let newToDo = {nameTask: trimName, dateFrom: trimDateFrom, dateTo: trimDateTo, selectPersonnel: trimselect};
+               localList.push(newToDo);
+               console.log(localList);
+               localStorage.setItem(`${NoSavedItems}_toDo`, JSON.stringify(localList));
+    
+               loadTask();
+    
+               //On efface les contenus d'informations de la tâche en configuration..
+               newTask.name = '';
+               newTask.from = '';
+               newTask.to = '';
+               newTask.personnel = '';
+               nameTask.value = '';
+               dateFrom.value = '';
+               dateTo.value = '';
+               selectPersonnel.value = '';
+               document.getElementById('task-name').innerHTML = '';
+               document.getElementById('taskFrom').innerHTML = '';
+               document.getElementById('taskTo').innerHTML = '';
+               document.getElementById('taskPersonnel').innerHTML = '';
+            }
+        });
+
+    }
+
+    //Avertissement de sauvegarde..
+    let set = false;
+    setInterval(() => {avertissement()},1000);
+
+    function avertissement(){
+        if(localStorage.getItem(NoSavedItems) || localStorage.getItem(`${NoSavedItems}_part`) || localStorage.getItem(`${NoSavedItems}_toDo`)){
+            if(!set){
+                let exclam = document.createElement('img');
+                exclam.setAttribute('src', 'img/exclamation.png');
+                exclam.setAttribute('alt', 'Sauvegarde possible');
+                exclam.setAttribute('class', 'attention');
+                document.getElementById('formToSave').appendChild(exclam);
+                set = true;
+            }
+           
+
+        }
+    }
+
     //Evenement de sauvegarde..
     let confirmationSave = false;
     let pressSave = document.getElementById('save');
 
     if(pressSave != null){
         pressSave.addEventListener('click', function(e){
-            if(localStorage.getItem(NoSavedItems) || localStorage.getItem(`${NoSavedItems}_part`)){
+            if(localStorage.getItem(NoSavedItems) || localStorage.getItem(`${NoSavedItems}_part`) || localStorage.getItem(`${NoSavedItems}_toDo`)){
                 if(confirmationSave){
                     savingItems();
                 }else{
@@ -488,17 +767,17 @@ window.addEventListener('DOMContentLoaded', function(){
         });
     };
 
+    let pressDownload = document.getElementById('download');
+
     //Evenement de synchronisation..
-    if(typeof(pressDownload) != 'undefined'){
+    if(pressDownload  != null){
         let confirmationSynchro = false;
-        let pressDownload = document.getElementById('download');
         pressDownload.addEventListener('click', function(e){
-            if(!localStorage.getItem(NoSavedItems) && !localStorage.getItem(`${NoSavedItems}_part`)){
-                e.preventDefault();
-            }else{
+            if(localStorage.getItem(NoSavedItems) || localStorage.getItem(`${NoSavedItems}_part`) || localStorage.getItem(`${NoSavedItems}_toDo`)){
                 if(confirmationSynchro){
                     localStorage.removeItem(NoSavedItems);
-                    localStorage.removeItem(`${NoSavedItems}_part`)
+                    localStorage.removeItem(`${NoSavedItems}_part`);
+                    localStorage.removeItem(`${NoSavedItems}_toDo`)
                     window.location.reload();
                 }else{
                     pressDownload.style.color = 'rgb(255, 78, 78)';
@@ -508,6 +787,8 @@ window.addEventListener('DOMContentLoaded', function(){
                         confirmationSynchro = false;
                     }, 1000);
                 }
+            }else{
+                e.preventDefault();
             };
         })
     }
