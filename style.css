@@ -735,6 +735,25 @@ footer #download:active, footer #save:active, footer #disconnect:active{
     max-height: 300px;
 }
 
+.formLogin .rgpd label{
+    padding-block: 0.5rem;
+    padding-left: 0.5rem;
+    padding-right: 0px;
+    font-size: 0.8rem;
+}
+
+.formLogin .disabled{
+    background-color: #b6b6b6;
+}
+
+.formLogin .disabled:hover{
+    background-color: #afafaf;
+}
+
+.formLogin .disabled:active{
+    background-color: #909090;
+}
+
 .alert{
     text-align: center;
     display: flex;

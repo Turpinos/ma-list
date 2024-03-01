@@ -3,14 +3,27 @@ const indicatorSwitch = document.querySelectorAll('.indicatorSwitch');
 const buttonCrt = document.getElementById('createButton');
 const confPass = document.getElementById('confPassword');
 const alertDiv = document.querySelectorAll('.alert');
+const rgpd = document.querySelector('.rgpd input');
+
+rgpd.addEventListener('click', function(e){
+    if(e.target.checked){
+        buttonCrt.removeAttribute('class');
+    }else{
+        buttonCrt.setAttribute('class', 'disabled');
+    }
+});
 
 buttonCrt.addEventListener('click', function(e){
-    
-    if(passwordInput[1].value !== confPass.value){
+
+    if(rgpd.checked){
+        if(passwordInput[1].value !== confPass.value){
+            e.preventDefault();
+            const p = document.createElement('p');
+            p.innerText = 'Erreur dans la confirmation du mot de passe';
+            alertDiv[1].appendChild(p);
+        }
+    }else{
         e.preventDefault();
-        const p = document.createElement('p');
-        p.innerText = 'Erreur dans la confirmation du mot de passe';
-        alertDiv[1].appendChild(p);
     }
 })
 

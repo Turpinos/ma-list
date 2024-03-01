@@ -812,7 +812,7 @@ window.addEventListener('DOMContentLoaded', function(){
         if( error.childElementCount != 0){
             setTimeout(() => {
                 error.style.display = 'none';
-        }, 3000);
+        }, 30000);
         }else{
             error.style.display = 'none';
         }

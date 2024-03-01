@@ -104,7 +104,11 @@
                             <label for="confirmPassword">Confirmez le MPD:</label>
                             <input id="confPassword" minlength="10" maxlength="25" type="password">
                         </div>
-                        <button id="createButton" type="submit">Créer un compte</button>
+                        <div class="rgpd">
+                            <input type="checkbox" id="rgpd" name="rgpd" value="1">
+                            <label for="rgpd">Vous acceptez <a href="Politique_de_Confidentialite.pdf" target="_blank">la politique de confidentialité</a> du site.</label>
+                        </div>
+                        <button id="createButton" class="disabled" type="submit">Créer un compte</button>
                     </form>
                 </div>
             </main>
@@ -238,7 +242,11 @@
                     <label for="confirmPassword">Confirmez le MPD:</label>
                     <input id="confPassword" minlength="10" maxlength="25" type="password">
                 </div>
-                <button id="createButton" type="submit">Créer un compte</button>
+                <div class="rgpd">
+                    <input type="checkbox" id="rgpd" name="rgpd" value="1">
+                    <label for="rgpd">Vous acceptez <a href="Politique_de_Confidentialite.pdf" target="_blank">la politique de confidentialité</a> du site.</label>
+                </div>
+                <button id="createButton" class="disabled" type="submit">Créer un compte</button>
                 <div class="alert">
                     <?php
 

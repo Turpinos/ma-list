@@ -16,7 +16,7 @@ if(isset($_POST['inputUser']) && isset($_POST['inputPassword'])){
        }   
    }
 
-   //Recherche après connexion si le compte possède des attributions..
+   //Recherche après vérification si le compte possède des attributions..
    if($search){
        $session = $mySqlConnection->prepare('SELECT `userName`, `sessionKey` FROM `attributions` WHERE userName = :userName');
        $session->execute([
@@ -82,7 +82,7 @@ if(isset($_POST['inputUser']) && isset($_POST['inputPassword'])){
 
 //Validation de connexion pour une creation de compte..
 if(isset($_POST['inputCrtUser'])){
-       $inputCrtUser = validInput($_POST['inputCrtUser']);
+       $inputCrtUser = trim(validInput($_POST['inputCrtUser']));
        if(empty($inputCrtUser) || preg_match('/["\'(|;,><{=})(.]/', $_POST['inputCrtUser'])){
               $_SESSION['errorCrtUser'] = 'Votre pseudo est invalide';
        }
@@ -118,15 +118,22 @@ if(isset($inputCrtUser) && isset($inputCrtPassword) && !empty($inputCrtUser) && 
        }else{
               $ip = "ip-". $_SERVER['REMOTE_ADDR'];
        }
+
+       if(isset($_POST['rgpd'])){
+              $rgpd = 1;
+       }else{
+              $rgpd = 0;
+       };
        
        if(!isset($_SESSION['errorUserAlreadyExists'])){
               $_SESSION['placeholderPseudo'] = $inputCrtUser;
               $_SESSION['placeHolderpass'] = $inputCrtPassword;
-              $addUser = $mySqlConnection -> prepare('INSERT INTO `users`(`userName`, `userKey`, `ip`) VALUES (:userName, :userKey, :ip)');
+              $addUser = $mySqlConnection -> prepare('INSERT INTO `users`(`userName`, `userKey`, `ip`, `rgpd`) VALUES (:userName, :userKey, :ip, :rgpd)');
               $addUser -> execute([
                      'userName' => $inputCrtUser,
                      'userKey' => password_hash($inputCrtPassword, PASSWORD_DEFAULT),
-                     'ip' => $ip
+                     'ip' => $ip,
+                     'rgpd' => $rgpd
               ]);
        }
 }
@@ -256,6 +263,12 @@ if(isset($_POST['deleteSession']) && isset($_POST['ConfDeleteSession'])){
             ]);
             $attri = $selectAttri->fetchAll();
 
+            $selectTask = $mySqlConnection->prepare('SELECT `taskName` FROM `agenda` WHERE sessionKey = :sessionKey');
+            $selectTask->execute([
+              'sessionKey' => $_SESSION['sessionActive']
+            ]);
+            $task = $selectTask->fetchAll();
+
             try {
               // Démarrez la transaction
               $mySqlConnection->beginTransaction();
@@ -281,6 +294,13 @@ if(isset($_POST['deleteSession']) && isset($_POST['ConfDeleteSession'])){
                      ]);
               }
 
+              if(count($task) != 0){
+                     $delTask = $mySqlConnection->prepare('DELETE FROM agenda WHERE sessionKey = :sessionKey');
+                     $delTask->execute([
+                            'sessionKey' => $_SESSION['sessionActive']
+                     ]);
+              }
+
               $delSession = $mySqlConnection->prepare('DELETE FROM sessionsusers WHERE sessionKey = :sessionKey');
               $delSession->execute([
                      'sessionKey' => $_SESSION['sessionActive']
@@ -299,7 +319,7 @@ if(isset($_POST['deleteSession']) && isset($_POST['ConfDeleteSession'])){
               $mySqlConnection->rollBack();
       
               // Gérez l'erreur ou affichez un message d'erreur
-              $_POST['errorDelSession'] =  "Erreur : " . $e->getMessage();
+              $_POST['errorDelSession'] =  "Erreur : La suppression a échoué";
           }
        }else{
               $_POST['errorMdp'] = 'Le mot de passe est erroné';
@@ -342,6 +362,19 @@ if(isset($_POST['deleteAccount']) && isset($_POST['ConfDeleteAccount'])){
                      ]);
                      $part[$i] = $selectParts->fetchAll();
 
+                     $selectTasks = $mySqlConnection->prepare('SELECT `taskName` FROM `agenda` WHERE sessionKey = :sessionKey');
+                     $selectTasks->execute([
+                            'sessionKey' => $own['sessionKey']
+                     ]);
+                     $tasks[$i] = $selectTasks->fetchAll();
+
+                     $selectAttri = $mySqlConnection->prepare('SELECT `userName` FROM `attributions` WHERE sessionKey = :sessionKey');
+                     $selectAttri->execute([
+                            'sessionKey' => $own['sessionKey']
+                     ]);
+                     $attri[$i] = $selectAttri->fetchAll();
+
+                     $i++;
               }
 
               try {
@@ -364,12 +397,23 @@ if(isset($_POST['deleteAccount']) && isset($_POST['ConfDeleteAccount'])){
                                           'sessionKey' => $own['sessionKey']
                                    ]);
                             }
-                     }
 
-                     $delSpecSession = $mySqlConnection->prepare('DELETE FROM `attributions` WHERE userName = :userName');
-                     $delSpecSession->execute([
-                            'userName' => $_SESSION['userActive']
-                     ]);
+                            if(count($tasks[$u]) != 0){
+                                   $delTasks = $mySqlConnection->prepare('DELETE FROM agenda WHERE sessionKey = :sessionKey');
+                                   $delTasks->execute([
+                                          'sessionKey' => $own['sessionKey']
+                                   ]);
+                            }
+
+                            if(count($attri[$u]) != 0){
+                                   $delSpecSession = $mySqlConnection->prepare('DELETE FROM attributions WHERE sessionKey = :sessionKey');
+                                   $delSpecSession->execute([
+                                          'sessionKey' => $own['sessionKey']
+                                   ]);
+                            }
+                            
+                            $u++;
+                     }
 
                      $delSession = $mySqlConnection->prepare('DELETE FROM sessionsusers WHERE UserSession = :UserSession');
                      $delSession->execute([
@@ -395,7 +439,7 @@ if(isset($_POST['deleteAccount']) && isset($_POST['ConfDeleteAccount'])){
                      $mySqlConnection->rollBack();
              
                      // Gérez l'erreur ou affichez un message d'erreur
-                     $_POST['errorDelSession'] = "Erreur : " . $e->getMessage();
+                     $_POST['errorDelAccount'] = "Erreur : La suppression a échoué";
               }
 
        }else{
